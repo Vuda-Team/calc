@@ -2,510 +2,1125 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#eef0f4">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Quo Calculator</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%232563eb'/%3E%3Ccircle cx='32' cy='17' r='6' fill='white'/%3E%3Crect x='14' y='28' width='36' height='8' rx='4' fill='white'/%3E%3Ccircle cx='32' cy='47' r='6' fill='white'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Ccircle cx='30' cy='30' r='17' fill='none' stroke='white' stroke-width='8' stroke-dasharray='91.3 15.5' transform='rotate(70.8 30 30)'/%3E%3Cpath d='M33 33L52 52' stroke='white' stroke-width='8'/%3E%3C/svg%3E">
 <style>
-  :root {
-    --blue-900:#0b1f5c; --blue-700:#1d4ed8; --blue-600:#2563eb; --blue-500:#3b82f6;
-    --blue-200:#bfdbfe; --blue-100:#dbeafe; --blue-50:#eff6ff;
-    --page:#e8f0ff; --card:#ffffff; --card-shadow:0 30px 60px -20px rgba(37,99,235,.35), 0 0 0 1px rgba(37,99,235,.08);
-    --screen:#f3f7ff; --text:#0b1f5c; --muted:#6b86c9;
-    --key:#f3f7ff; --key-text:#0b1f5c; --key-hover:#e3ecff;
-    --op:#dbeafe; --op-text:#1d4ed8;
-    --eq-a:#3b82f6; --eq-b:#1d4ed8; --eq-text:#fff;
-    --line:#dbe6ff;
-  }
-  [data-theme="blue"] {
-    --page:#0b1f5c; --card:linear-gradient(160deg,#2563eb,#1740b8); --card-shadow:0 30px 60px -20px rgba(0,0,0,.5);
-    --screen:rgba(255,255,255,.12); --text:#fff; --muted:#bfd3ff;
-    --key:#ffffff; --key-text:#0b1f5c; --key-hover:#e3ecff;
-    --op:#dbeafe; --op-text:#1d4ed8;
-    --eq-a:#0b1f5c; --eq-b:#07153f; --eq-text:#fff;
-    --line:rgba(255,255,255,.2);
-  }
-  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html,body { height:100%; margin:0; }
-  body {
-    background:var(--page); color:var(--text);
-    font-family:ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
-    display:grid; place-items:center; padding:16px; transition:background .4s;
-  }
-  .calc {
-    width:100%; max-width:360px; background:var(--card); border-radius:32px;
-    box-shadow:var(--card-shadow); padding:18px; position:relative; overflow:hidden;
-    transition:background .4s;
-  }
-  header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
-  .brand { display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.02em; }
-  .brand svg { width:34px; height:34px; display:block; }
-  .brand span { font-size:20px; letter-spacing:.04em; }
-  .tools { display:flex; gap:6px; }
-  .icon-btn {
-    width:36px; height:36px; border-radius:12px; border:0; cursor:pointer;
-    background:var(--screen); color:var(--text); display:grid; place-items:center;
-    transition:transform .1s, background .2s;
-  }
-  .icon-btn:hover { background:var(--key-hover); color:var(--blue-900); }
-  .icon-btn:active { transform:scale(.92); }
-  .icon-btn svg { width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-  .icon-btn.on { background:var(--blue-600); color:#fff; }
+:root{
+  --bg:#eef0f4;--page:#e4e7ee;--panel:#fff;--ink:#101828;--mute:#667085;--line:#d3d8e2;
+  --key:#fff;--key-ink:#101828;--key-hover:#f1f3f8;--fn:#dfe3ec;--fn-ink:#101828;--sci:#e8ebf2;
+  --op:#dbe7ff;--op-ink:#1d4ed8;--eq:#2563eb;--eq-ink:#fff;
+  --accent:#2563eb;--accent-ink:#fff;--accent-soft:#dbe7ff;--danger:#d92d20;--shade:rgba(16,24,40,.16);
+  --scale:1;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Mono",Consolas,Menlo,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --num:var(--mono);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.4 var(--sans);display:grid;place-items:center;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:100%;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation}
+input,.selectable{user-select:text;-webkit-user-select:text}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
-  .screen {
-    background:var(--screen); border-radius:22px; padding:14px 16px 12px; min-height:128px;
-    display:flex; flex-direction:column; justify-content:flex-end; text-align:right; position:relative;
-    cursor:pointer; user-select:none;
-  }
-  .mem { position:absolute; left:14px; top:12px; font-size:11px; font-weight:800; color:var(--muted); letter-spacing:.08em; opacity:0; transition:opacity .2s; }
-  .mem.show { opacity:1; }
-  .expr { font-size:16px; color:var(--muted); min-height:22px; overflow-x:auto; white-space:nowrap; scrollbar-width:none; direction:rtl; }
-  .expr::-webkit-scrollbar { display:none; }
-  .expr bdi { direction:ltr; unicode-bidi:isolate; }
-  .result { font-size:46px; font-weight:800; line-height:1.15; white-space:nowrap; overflow:hidden; letter-spacing:-.01em; transition:font-size .1s; }
-  .result.err { font-size:22px; color:#ef4444; }
-  [data-theme="blue"] .result.err { color:#ffd0d0; }
-  .toast { position:absolute; left:50%; top:10px; transform:translate(-50%,-30px); background:var(--blue-900); color:#fff; font-size:12px; font-weight:700; padding:6px 12px; border-radius:99px; opacity:0; transition:.25s; pointer-events:none; z-index:5; }
-  .toast.show { opacity:1; transform:translate(-50%,0); }
+/* shell */
+.shell{width:100%;height:100vh;height:100dvh;max-height:940px;display:flex;position:relative;background:var(--bg);
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+@media (min-width:900px) and (min-height:680px){
+  .shell{max-width:1240px;height:calc(100vh - 48px);height:calc(100dvh - 48px);max-height:860px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+}
+.app{flex:1;min-width:0;max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:8px;padding:10px;min-height:0}
+.shell[data-inline="1"] .app{max-width:920px}
+.view{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
+.page{overflow-y:auto;overflow-x:hidden;padding-bottom:6px;-webkit-overflow-scrolling:touch}
 
-  .memrow { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:12px 0 8px; }
-  .memrow button { background:transparent; border:0; color:var(--muted); font:inherit; font-weight:800; font-size:13px; padding:6px; border-radius:10px; cursor:pointer; letter-spacing:.05em; }
-  .memrow button:hover { background:var(--screen); color:var(--text); }
+/* bar */
+.bar{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.brand{display:flex;align-items:center;gap:7px;font:700 18px var(--sans);letter-spacing:-.03em;margin-right:auto}
+.logo{width:26px;height:26px;color:var(--ink);display:block}
+.tabs{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.tabs button{border:0;background:transparent;padding:6px 11px;font:600 12px var(--sans);letter-spacing:.04em;color:var(--mute)}
+.tabs button.on{background:var(--ink);color:var(--bg)}
+.ib{width:34px;height:34px;flex:0 0 auto;display:grid;place-items:center;border:1px solid var(--line);background:transparent;border-radius:7px;color:var(--ink);padding:0}
+.ib:hover{background:var(--panel)}
+.ib svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.shell[data-dock="1"] #histBtn{display:none}
+@media (max-width:430px){.brand b{display:none}.tabs button{padding:6px 9px}}
 
-  .keys { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
-  .keys button {
-    font:inherit; font-size:22px; font-weight:700; height:62px; border:0; border-radius:20px; cursor:pointer;
-    background:var(--key); color:var(--key-text); transition:transform .08s, background .15s, box-shadow .15s;
-    box-shadow:0 2px 0 rgba(11,31,92,.08);
-  }
-  .keys button:hover { background:var(--key-hover); }
-  .keys button:active, .keys button.press { transform:scale(.94); }
-  .keys .op { background:var(--op); color:var(--op-text); }
-  .keys .op:hover { background:#c7dcff; }
-  .keys .fn { background:var(--blue-600); color:#fff; font-size:19px; }
-  [data-theme="blue"] .keys .fn { background:var(--blue-900); }
-  .keys .fn:hover { background:var(--blue-700); }
-  .keys .eq { background:linear-gradient(160deg,var(--eq-a),var(--eq-b)); color:var(--eq-text); box-shadow:0 8px 18px -6px rgba(11,31,92,.5); }
-  .keys .eq:hover { filter:brightness(1.1); }
+/* display */
+.disp{background:var(--panel);border:1px solid var(--line);border-radius:var(--r,9px);padding:8px 12px 8px;display:flex;flex-direction:column;gap:2px;flex:0 0 auto}
+.chips{display:flex;gap:6px;min-height:22px;align-items:center}
+.chip{border:1px solid var(--line);background:transparent;border-radius:4px;padding:1px 7px;font:700 10px/1.6 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--mute)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.exprRow{display:flex;align-items:center;gap:4px}
+#expr{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font-family:var(--num);font-weight:500;font-size:clamp(16px,4.8vw,22px);text-align:right;padding:6px 0;outline:none;caret-color:var(--accent);border-radius:0}
+#expr::selection{background:var(--accent-soft)}
+.bsp{width:36px;height:32px;border:0;background:transparent;color:var(--mute);display:grid;place-items:center;border-radius:6px;padding:0}
+.bsp:hover,.bsp:active{background:var(--bg);color:var(--ink)}
+.bsp svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#result{font-family:var(--num);font-weight:600;font-size:calc(clamp(34px,12vw,58px)*var(--scale));line-height:1.15;text-align:right;white-space:nowrap;overflow:hidden;letter-spacing:-.02em;color:var(--mute);cursor:pointer;min-height:1.15em}
+#result.final{color:var(--ink)}
+#result.warn{font-size:17px;color:var(--danger);opacity:.75;line-height:2.6}
+#result.err{font-size:19px;color:var(--danger);line-height:2.4}
+.subrow{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:24px}
+.mem{display:flex;gap:2px}
+.mem button{border:0;background:transparent;color:var(--mute);font:700 11px var(--sans);letter-spacing:.06em;padding:3px 7px;border-radius:4px}
+.mem button:hover{background:var(--bg);color:var(--ink)}
+.mem button.has{color:var(--accent)}
+#sub{font:12px var(--num);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-  .panel {
-    position:absolute; inset:0; background:var(--card); z-index:4; padding:18px; display:flex; flex-direction:column;
-    transform:translateY(102%); transition:transform .35s cubic-bezier(.2,.8,.2,1);
-  }
-  [data-theme="blue"] .panel { background:linear-gradient(160deg,#2563eb,#1740b8); }
-  .panel.open { transform:none; }
-  .panel h2 { margin:0; font-size:18px; }
-  .panel-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
-  .hist { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; }
-  .hist-item { background:var(--screen); border-radius:16px; padding:10px 14px; text-align:right; cursor:pointer; border:0; font:inherit; color:var(--text); }
-  .hist-item:hover { background:var(--key-hover); color:var(--blue-900); }
-  .hist-item small { display:block; color:var(--muted); font-size:13px; overflow:hidden; text-overflow:ellipsis; }
-  .hist-item strong { font-size:22px; }
-  .empty { margin:auto; color:var(--muted); text-align:center; font-size:14px; }
-  .clear-hist { margin-top:12px; border:0; border-radius:14px; padding:12px; font:inherit; font-weight:700; background:var(--blue-600); color:#fff; cursor:pointer; }
-  [data-theme="blue"] .clear-hist { background:var(--blue-900); }
-  .hint { text-align:center; color:var(--muted); font-size:11px; margin-top:12px; }
-  @media (max-width:380px){ .keys button{height:56px;font-size:20px} .result{font-size:40px} }
+/* keys */
+.pad{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
+.blk{display:grid;gap:6px;grid-auto-rows:1fr;min-height:0}
+.sci{grid-template-columns:repeat(5,1fr);flex:var(--sr,4) 1 0px}
+.main{grid-template-columns:repeat(4,1fr);flex:5 1 0px}
+.shell[data-sci="0"] .sci{display:none}
+.shell[data-r5="0"] .sci .r5{display:none}
+.shell[data-inline="1"] .pad{flex-direction:row}
+.shell[data-inline="1"] .sci{flex:5 1 0px}
+.shell[data-inline="1"] .main{flex:4 1 0px}
+.shell[data-lh="1"][data-inline="1"] .main{order:-1}
+.k{min-width:0;min-height:0;padding:0;border:1px solid var(--line);border-radius:8px;background:var(--key);color:var(--key-ink);font-family:var(--sans);font-weight:500;box-shadow:inset 0 -3px 0 var(--shade);transition:transform .06s,background .12s;display:grid;place-items:center;line-height:1}
+.k sup{font-size:.64em;vertical-align:.5em;line-height:0}
+.k:active,.k.pr{transform:translateY(2px);box-shadow:inset 0 -1px 0 var(--shade)}
+@media (hover:hover){.k:hover{background:var(--key-hover)}}
+.main .k{font-size:clamp(18px,min(6.4vw,3.7vh),30px)}
+.sci .k{font-size:clamp(11px,min(3.5vw,2.4vh),16px);background:var(--sci)}
+.shell[data-inline="1"] .main .k{font-size:clamp(16px,min(3vw,4.6vh),30px)}
+.shell[data-inline="1"] .sci .k{font-size:clamp(11px,min(1.7vw,2.8vh),17px)}
+.k.d{font-family:var(--num);font-weight:600}
+.k.fn{background:var(--fn);color:var(--fn-ink)}
+.k.op{background:var(--op);color:var(--op-ink);font-size:clamp(20px,min(7vw,4.2vh),34px)}
+.k.eq{background:var(--eq);color:var(--eq-ink);border-color:transparent;font-weight:700}
+.k.on{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.l2{display:none}
+.shell[data-second="1"] .has-alt .l1{display:none}
+.shell[data-second="1"] .has-alt .l2{display:inline}
+@media (hover:hover){.k.op:hover,.k.fn:hover{filter:brightness(.96)}.k.eq:hover{filter:brightness(1.08)}}
+
+/* compact landscape */
+@media (max-height:520px){
+  .app{padding:6px;gap:5px}
+  .ib{width:30px;height:30px}
+  .disp{padding:3px 10px 4px}
+  .chips{min-height:20px}
+  #expr{font-size:16px;padding:1px 0}
+  #result{font-size:calc(clamp(24px,9vh,36px)*var(--scale))}
+  .subrow{min-height:20px}
+  .blk{gap:4px}.pad{gap:5px}
+  .k{border-radius:6px}
+}
+
+/* side panel */
+.side{width:min(340px,92vw);display:flex;flex-direction:column;background:var(--panel);border-left:1px solid var(--line);z-index:20;min-height:0}
+.shell[data-dock="0"] .side{position:fixed;top:0;right:0;bottom:0;transform:translateX(105%);transition:transform .25s;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+.shell[data-dock="0"] .side.open{transform:none;box-shadow:-12px 0 30px rgba(0,0,0,.25)}
+.shell[data-dock="1"] .side{width:300px;flex:0 0 300px}
+.shell[data-dock="1"] #sideClose{display:none}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:19;opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.on{opacity:1;pointer-events:auto}
+.shell[data-dock="1"] .scrim{display:none}
+.side-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border-bottom:1px solid var(--line)}
+.stabs{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.stabs button{border:0;background:transparent;padding:6px 12px;font:600 12px var(--sans);color:var(--mute);letter-spacing:.04em}
+.stabs button.on{background:var(--ink);color:var(--bg)}
+.side-body{flex:1;overflow-y:auto;padding:8px 10px;display:flex;flex-direction:column;gap:6px;-webkit-overflow-scrolling:touch}
+.empty{margin:auto;color:var(--mute);text-align:center;font-size:13px;padding:20px}
+.he{border:1px solid var(--line);border-radius:7px;overflow:hidden;display:flex;flex-direction:column}
+.he button{border:0;background:transparent;text-align:right;padding:6px 10px;font-family:var(--num)}
+.he button:hover{background:var(--bg)}
+.hx{color:var(--mute);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hv{font-weight:600;font-size:17px}
+.vr{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:7px;padding:2px 4px 2px 2px}
+.vr .vn{border:0;background:transparent;font:700 14px var(--num);padding:6px 8px;border-radius:5px;min-width:56px;text-align:left;color:var(--accent)}
+.vr .vn:hover{background:var(--bg)}
+.vv{flex:1;text-align:right;font:13px var(--num);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vd{border:0;background:transparent;color:var(--mute);width:26px;height:26px;border-radius:5px;padding:0}
+.vd:hover{background:var(--bg);color:var(--danger)}
+.vform{display:flex;gap:6px;margin-top:6px}
+.hint{color:var(--mute);font-size:12px;margin:4px 2px 0}
+
+/* shared controls */
+.btn{border:1px solid var(--line);background:var(--bg);border-radius:7px;padding:8px 12px;font-weight:600;font-size:13px}
+.btn:hover{border-color:var(--mute)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.danger{color:var(--danger)}
+.in{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:9px 10px;font:500 16px var(--num);color:var(--ink);outline:none;appearance:none;-webkit-appearance:none}
+.in:focus{border-color:var(--accent)}
+select.in{font-family:var(--sans);font-size:15px;background-image:linear-gradient(45deg,transparent 50%,var(--mute) 50%),linear-gradient(135deg,var(--mute) 50%,transparent 50%);background-position:calc(100% - 15px) 52%,calc(100% - 10px) 52%;background-size:5px 5px;background-repeat:no-repeat;padding-right:26px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.card h3{margin:0;font:700 11px var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--mute)}
+.mute{color:var(--mute)}
+.cats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:0 0 auto}
+.cats::-webkit-scrollbar{display:none}
+.cats button{flex:0 0 auto;border:1px solid var(--line);background:transparent;border-radius:6px;padding:6px 11px;font:600 12px var(--sans);color:var(--mute)}
+.cats button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.cvrow{display:grid;grid-template-columns:1fr minmax(96px,38%);gap:8px}
+.cvmid{display:flex;justify-content:center}
+.out,output{display:flex;align-items:center;justify-content:flex-end;min-height:42px;padding:8px 10px;border:1px solid var(--line);border-radius:7px;font:600 18px var(--num);overflow-x:auto;white-space:nowrap;cursor:pointer;background:var(--bg);scrollbar-width:none;user-select:text}
+.cvact{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.all{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.all button{display:flex;justify-content:space-between;gap:8px;border:1px solid var(--line);background:transparent;border-radius:6px;padding:7px 9px;text-align:left}
+.all button.on{border-color:var(--accent)}
+.all b{font:500 13px var(--num);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.all span{color:var(--mute);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:10px}
+.line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.line .in{width:92px;flex:1 1 80px;padding:8px}
+.line output{flex:1 1 90px;min-height:38px;font-size:16px}
+.rows{display:grid;grid-template-columns:auto 1fr;gap:8px 10px;align-items:center}
+.rows label{color:var(--mute);font-size:13px}
+.chipset{display:flex;gap:6px;flex-wrap:wrap}
+.chipset button{border:1px solid var(--line);background:transparent;border-radius:6px;padding:5px 10px;font:600 12px var(--sans)}
+.chipset button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
+/* settings */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);z-index:40;padding:16px}
+.modal.open{display:flex}
+.sheet{width:min(580px,100%);max-height:min(90vh,820px);max-height:min(90dvh,820px);overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;-webkit-overflow-scrolling:touch}
+.sheet-head{position:sticky;top:0;background:var(--panel);display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);z-index:2}
+.sheet-head h2{margin:0;font-size:16px}
+.sec{padding:14px 14px 6px;font:700 11px var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--mute)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 14px;border-top:1px solid var(--line);min-height:50px}
+.row .lab{flex:1;min-width:0}
+.row .lab small{display:block;color:var(--mute);font-size:12px}
+.seg{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;flex:0 0 auto}
+.seg button{border:0;background:transparent;padding:6px 11px;font:600 12.5px var(--sans);color:var(--mute);border-left:1px solid var(--line)}
+.seg button:first-child{border-left:0}
+.seg button.on{background:var(--accent);color:var(--accent-ink)}
+.row select.in{width:auto;max-width:230px;padding:7px 28px 7px 10px;font-size:14px}
+.row input.in{width:90px;padding:7px 9px;font-size:15px}
+.sw{position:relative;width:42px;height:24px;flex:0 0 auto;display:block}
+.sw input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;z-index:1}
+.sw i{position:absolute;inset:0;background:var(--line);border-radius:12px;transition:background .15s}
+.sw i::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .15s;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.sw input:checked+i{background:var(--accent)}
+.sw input:checked+i::after{transform:translateX(18px)}
+.sw input:focus-visible+i{outline:2px solid var(--accent);outline-offset:2px}
+.swatches{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:260px;align-items:center}
+.swc{width:24px;height:24px;border-radius:5px;border:1px solid rgba(0,0,0,.2);padding:0}
+.swc.on{outline:2px solid var(--ink);outline-offset:2px}
+input[type=color]{width:30px;height:26px;padding:0;border:1px solid var(--line);border-radius:5px;background:transparent;cursor:pointer}
+.acts{display:flex;gap:8px;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line)}
+.about{padding:10px 14px 18px;border-top:1px solid var(--line);color:var(--mute);font-size:12.5px;line-height:1.6}
+.about code{font-family:var(--mono);color:var(--ink);background:var(--bg);padding:1px 4px;border-radius:3px}
+@media (max-width:600px){.modal{align-items:flex-end;padding:0}.sheet{border-radius:12px 12px 0 0;max-height:92vh;max-height:92dvh}}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);font-size:13px;font-weight:600;padding:8px 14px;border-radius:7px;opacity:0;pointer-events:none;transition:.2s;z-index:60;max-width:90vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
 <body>
-<main class="calc" id="calc">
-  <div class="toast" id="toast"></div>
+<div class="shell" id="shell" data-inline="0" data-dock="0" data-sci="0" data-r5="0" data-second="0" data-lh="0">
+  <div class="app" id="app">
+    <header class="bar">
+      <div class="brand">
+        <svg class="logo" viewBox="0 0 60 60" aria-hidden="true">
+          <circle cx="30" cy="30" r="20" fill="none" stroke="currentColor" stroke-width="9" stroke-dasharray="107.66 18" transform="rotate(70.8 30 30)"/>
+          <path d="M33 33L54 54" stroke="var(--accent)" stroke-width="9" fill="none"/>
+        </svg>
+        <b>quo</b>
+      </div>
+      <nav class="tabs" id="tabs" aria-label="Mode">
+        <button data-view="calc" class="on">Calc</button><button data-view="convert">Convert</button><button data-view="tools">Tools</button>
+      </nav>
+      <button class="ib" id="histBtn" aria-label="History and variables"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 2"/></svg></button>
+      <button class="ib" id="setBtn" aria-label="Settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
+    </header>
 
-  <header>
-    <div class="brand" aria-label="Quo">
-      <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
-        <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient></defs>
-        <rect width="64" height="64" rx="18" fill="url(#g)"/>
-        <circle cx="32" cy="17" r="6" fill="#fff"/>
-        <rect x="14" y="28" width="36" height="8" rx="4" fill="#fff"/>
-        <circle cx="32" cy="47" r="6" fill="#fff"/>
-      </svg>
-      <span>QUO</span>
-    </div>
-    <div class="tools">
-      <button class="icon-btn" id="sepBtn" title="Thousands separators" aria-label="Toggle thousands separators">
-        <svg viewBox="0 0 24 24"><path d="M5 17h.01M12 17h.01M19 17h.01M4 8h4M10 8h4M16 8h4"/></svg>
-      </button>
-      <button class="icon-btn" id="themeBtn" title="Switch theme" aria-label="Switch theme">
-        <svg viewBox="0 0 24 24"><path d="M12 3c-4 5-6 7.5-6 11a6 6 0 0 0 12 0c0-3.500-2-6-6-11z"/></svg>
-      </button>
-      <button class="icon-btn" id="histBtn" title="History" aria-label="Open history">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-      </button>
-    </div>
-  </header>
-
-  <section class="screen" id="screen" title="Tap to copy result">
-    <div class="mem" id="mem">M</div>
-    <div class="expr" id="expr"><bdi></bdi></div>
-    <div class="result" id="result">0</div>
-  </section>
-
-  <div class="memrow">
-    <button data-act="mc">MC</button><button data-act="mr">MR</button>
-    <button data-act="mminus">M−</button><button data-act="mplus">M+</button>
+    <section class="view" id="calcView">
+      <div class="disp">
+        <div class="chips">
+          <button class="chip" id="angleChip" title="Angle unit (tap to change)">DEG</button>
+          <button class="chip" id="sciChip" title="Show scientific keys">Sci</button>
+        </div>
+        <div class="exprRow">
+          <input id="expr" inputmode="none" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" aria-label="Expression">
+          <button class="bsp" id="bsp" aria-label="Backspace"><svg viewBox="0 0 24 24"><path d="M9 5h11a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H9l-6-7z"/><path d="M12 9l5 6M17 9l-5 6"/></svg></button>
+        </div>
+        <div id="result" class="selectable" title="Tap to copy">0</div>
+        <div class="subrow">
+          <div class="mem" id="mem"><button data-m="mc">MC</button><button data-m="mr" id="mrBtn">MR</button><button data-m="mm">M−</button><button data-m="mp">M+</button></div>
+          <div id="sub"></div>
+        </div>
+      </div>
+      <div class="pad" id="pad"><div class="blk sci" id="sci"></div><div class="blk main" id="main"></div></div>
+    </section>
+    <section class="view page" id="convertView" hidden></section>
+    <section class="view page" id="toolsView" hidden></section>
   </div>
 
-  <div class="keys" id="keys">
-    <button class="fn" data-act="clear">C</button>
-    <button class="fn" data-act="paren">( )</button>
-    <button class="fn" data-act="percent">%</button>
-    <button class="op" data-op="÷">÷</button>
-
-    <button data-d="7">7</button><button data-d="8">8</button><button data-d="9">9</button>
-    <button class="op" data-op="×">×</button>
-
-    <button data-d="4">4</button><button data-d="5">5</button><button data-d="6">6</button>
-    <button class="op" data-op="−">−</button>
-
-    <button data-d="1">1</button><button data-d="2">2</button><button data-d="3">3</button>
-    <button class="op" data-op="+">+</button>
-
-    <button data-act="neg">±</button><button data-d="0">0</button><button data-act="dot">.</button>
-    <button class="eq" data-act="eq">=</button>
-  </div>
-  <div class="hint">Keyboard works too · Backspace deletes · Esc clears · tap screen to copy</div>
-
-  <aside class="panel" id="panel" aria-label="History">
-    <div class="panel-head">
-      <h2>History</h2>
-      <button class="icon-btn" id="closeHist" aria-label="Close history">
-        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
+  <div class="scrim" id="scrim"></div>
+  <aside class="side" id="side" aria-label="History and variables">
+    <div class="side-head">
+      <div class="stabs" id="stabs"><button data-st="hist" class="on">History</button><button data-st="vars">Variables</button></div>
+      <button class="ib" id="sideClose" aria-label="Close panel"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
-    <div class="hist" id="hist"></div>
-    <button class="clear-hist" id="clearHist">Clear history</button>
+    <div class="side-body" id="sideBody"></div>
   </aside>
-</main>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Settings">
+  <div class="sheet" id="sheet">
+    <div class="sheet-head"><h2>Settings</h2><button class="ib" id="setClose" aria-label="Close settings"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div id="setBody"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
 
 <script>
-(() => {
-  const MINUS = '\u2212';
-  const $ = id => document.getElementById(id);
-  const exprEl = $('expr').firstElementChild, resEl = $('result'), memEl = $('mem');
-  const calc = $('calc'), panel = $('panel'), histEl = $('hist'), toastEl = $('toast');
-
-  let expr = '';          // what the user is typing
-  let finished = false;   // true right after "="
-  let lastResult = null;  // number
-  let memory = 0, hasMem = false;
-  let history = [];
-  let useSep = true;
-
-  // safe storage helpers
-  const store = {
-    get(k, d){ try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch { return d; } },
-    set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+/*ENGINE-START*/
+class CalcError extends Error{constructor(m,k){super(m);this.kind=k||'syntax'}}
+const E=(()=>{
+  const PI=Math.PI, cfg={angle:'deg'}, vars={ans:0,m:0};
+  const has=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
+  const CONST={pi:PI,'π':PI,e:Math.E,tau:2*PI,phi:(1+Math.sqrt(5))/2};
+  const dom=()=>{throw new CalcError('Domain error','math')};
+  const div0=()=>{throw new CalcError("Can't divide by 0",'math')};
+  const unit=()=>cfg.angle==='deg'?PI/180:cfg.angle==='grad'?PI/200:1;
+  const toRad=x=>x*unit(), fromRad=x=>x/unit();
+  const snap=v=>Math.abs(v)<1e-15?0:v;
+  const LG=[0.99999999999980993,676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-0.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
+  const gamma=z=>{if(z<0.5)return PI/(Math.sin(PI*z)*gamma(1-z));z-=1;let x=LG[0];for(let i=1;i<9;i++)x+=LG[i]/(z+i);const t=z+7.5;return Math.sqrt(2*PI)*Math.pow(t,z+.5)*Math.exp(-t)*x};
+  const fact=x=>{if(Number.isInteger(x)){if(x<0)dom();if(x>170)return Infinity;let r=1;for(let i=2;i<=x;i++)r*=i;return r}if(x<-170||x>170)dom();return gamma(x+1)};
+  const nat=x=>{if(!Number.isInteger(x)||x<0)dom();return x};
+  const ncr=(n,r)=>{nat(n);nat(r);if(r>n)return 0;r=Math.min(r,n-r);let v=1;for(let i=1;i<=r;i++)v=v*(n-r+i)/i;return Math.round(v)};
+  const npr=(n,r)=>{nat(n);nat(r);if(r>n)return 0;let v=1;for(let i=0;i<r;i++)v*=(n-i);return v};
+  const gcd2=(a,b)=>{if(!Number.isInteger(a)||!Number.isInteger(b))dom();a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t}return a};
+  const rnd=(x,d)=>{const p=Math.pow(10,d||0);return Math.sign(x)*Math.round(Number((Math.abs(x)*p).toPrecision(12)))/p};
+  const pow=(b,e)=>{if(b===0&&e<0)div0();if(b<0&&!Number.isInteger(e)){const inv=1/e;if(Number.isInteger(inv)&&inv%2!==0)return -Math.pow(-b,e);dom()}return Math.pow(b,e)};
+  const F={
+    sin:[1,x=>snap(Math.sin(toRad(x)))], cos:[1,x=>snap(Math.cos(toRad(x)))],
+    tan:[1,x=>{const r=toRad(x);if(Math.abs(Math.cos(r))<1e-14)dom();return Math.tan(r)}],
+    asin:[1,x=>{if(Math.abs(x)>1)dom();return fromRad(Math.asin(x))}],
+    acos:[1,x=>{if(Math.abs(x)>1)dom();return fromRad(Math.acos(x))}],
+    atan:[1,x=>fromRad(Math.atan(x))], atan2:[2,(y,x)=>fromRad(Math.atan2(y,x))],
+    sinh:[1,Math.sinh], cosh:[1,Math.cosh], tanh:[1,Math.tanh], asinh:[1,Math.asinh],
+    acosh:[1,x=>x<1?dom():Math.acosh(x)], atanh:[1,x=>Math.abs(x)>=1?dom():Math.atanh(x)],
+    ln:[1,x=>x<=0?dom():Math.log(x)],
+    log:[[1,2],(x,b)=>{if(x<=0)dom();if(b===undefined)return Math.log10(x);if(b<=0||b===1)dom();return Math.log(x)/Math.log(b)}],
+    log2:[1,x=>x<=0?dom():Math.log2(x)], log10:[1,x=>x<=0?dom():Math.log10(x)], exp:[1,Math.exp],
+    sqrt:[1,x=>x<0?dom():Math.sqrt(x)], cbrt:[1,Math.cbrt],
+    root:[2,(x,n)=>{if(n===0)dom();if(x<0){if(Number.isInteger(n)&&n%2!==0)return -Math.pow(-x,1/n);dom()}return Math.pow(x,1/n)}],
+    abs:[1,Math.abs], floor:[1,Math.floor], ceil:[1,Math.ceil], trunc:[1,Math.trunc], sign:[1,Math.sign],
+    round:[[1,2],rnd], min:['+',Math.min], max:['+',Math.max], hypot:['+',Math.hypot],
+    rand:[[0,0],()=>Math.random()], pow:[2,pow],
+    fact:[1,fact], ncr:[2,ncr], npr:[2,npr], gcd:[2,gcd2], lcm:[2,(a,b)=>{const g=gcd2(a,b);return g?Math.abs(a*b)/g:0}]
   };
-  history = store.get('quo.history', []);
-  useSep = store.get('quo.sep', true);
-  document.documentElement.dataset.theme = store.get('quo.theme', 'light');
+  const ALIAS={arcsin:'asin',arccos:'acos',arctan:'atan',lg:'log10',sgn:'sign',factorial:'fact',random:'rand',int:'trunc',sqr:'sqrt',nthroot:'root'};
+  const isFunc=n=>has(F,ALIAS[n]||n);
+  const reserved=n=>has(CONST,n)||isFunc(n)||n==='ans'||n==='m'||n==='mod';
+  const OP={'+':'+','-':'-','\u2212':'-','*':'*','\u00d7':'*','/':'/','\u00f7':'/','^':'^','!':'!','%':'%','(':'(',')':')',',':',','=':'=','\u00b0':'\u00b0'};
 
-  /* ---------- parser (no eval) ---------- */
-  function evaluate(src) {
-    const tokens = src.match(/\d+\.?\d*|\.\d+|[+\u2212×÷()%]/g) || [];
-    let i = 0;
-    const peek = () => tokens[i], next = () => tokens[i++];
+  function tokenize(src){
+    const s=src.replace(/\s+/g,'').toLowerCase(), t=[]; let i=0;
+    while(i<s.length){
+      const r=s.slice(i); let m;
+      if((m=/^(?:\d+\.?\d*|\.\d+)(?:e[+\-\u2212]?\d+)?/.exec(r))){t.push({t:'n',v:parseFloat(m[0].replace('\u2212','-'))});i+=m[0].length;continue}
+      if(r[0]==='\u03c0'){t.push({t:'id',v:'\u03c0'});i++;continue}
+      if(r[0]==='\u221a'){t.push({t:'id',v:'sqrt'});i++;continue}
+      if(r[0]==='\u221b'){t.push({t:'id',v:'cbrt'});i++;continue}
+      if((m=/^(?:log10|log2|atan2)(?=\()/.exec(r))){t.push({t:'id',v:m[0]});i+=m[0].length;continue}
+      if((m=/^[a-z_]+/.exec(r))){t.push({t:'id',v:m[0]});i+=m[0].length;continue}
+      if(has(OP,r[0])){t.push({t:'op',v:OP[r[0]]});i++;continue}
+      throw new CalcError('Unexpected "'+r[0]+'"');
+    }
+    return t;
+  }
 
-    function expression() {
-      let left = term().v;
-      while (peek() === '+' || peek() === MINUS) {
-        const op = next(), t = term();
-        const right = t.pct ? left * t.v : t.v;   // 200 + 10% => 220
-        left = op === '+' ? left + right : left - right;
+  function run(tokens){
+    let i=0;
+    const eat=()=>tokens[i++];
+    const isOp=c=>{const t=tokens[i];return !!t&&t.t==='op'&&t.v===c};
+    const startsPrimary=t=>!!t&&(t.t==='n'||(t.t==='id'&&t.v!=='mod')||(t.t==='op'&&t.v==='('));
+    function addExpr(){
+      let v=mulExpr().v;
+      while(isOp('+')||isOp('-')){
+        const op=eat().v, r=mulExpr();
+        const rv=r.pct?v*r.v:r.v;
+        v=op==='+'?v+rv:v-rv;
       }
-      return left;
+      return v;
     }
-    function term() {
-      let cur = unary();
-      for (;;) {
-        const p = peek();
-        if (p === '×' || p === '÷') {
-          next(); const r = unary();
-          if (p === '÷' && r.v === 0) throw new Error('div0');
-          cur = { v: p === '×' ? cur.v * r.v : cur.v / r.v, pct: false };
-        } else if (p === '(') {               // implicit multiplication: 2(3)
-          const r = unary(); cur = { v: cur.v * r.v, pct: false };
-        } else break;
+    function mulExpr(){
+      let l=unary();
+      for(;;){
+        const p=tokens[i]; if(!p)break;
+        if(p.t==='op'&&(p.v==='*'||p.v==='/')){
+          eat(); const r=unary();
+          if(p.v==='/'){if(r.v===0)div0();l={v:l.v/r.v,pct:false}}else l={v:l.v*r.v,pct:false};
+        }else if(p.t==='id'&&p.v==='mod'){
+          eat(); const r=unary(); if(r.v===0)div0(); l={v:l.v%r.v,pct:false};
+        }else if(startsPrimary(p)&&!(p.t==='n'&&tokens[i-1].t==='n')){
+          const r=unary(); l={v:l.v*r.v,pct:false};
+        }else break;
       }
-      return cur;
+      return l;
     }
-    function unary() {
-      if (peek() === MINUS) { next(); const u = unary(); return { v: -u.v, pct: u.pct }; }
-      if (peek() === '+') { next(); return unary(); }
-      return postfix();
+    function unary(){
+      if(isOp('-')){eat();const u=unary();return {v:-u.v,pct:u.pct}}
+      if(isOp('+')){eat();return unary()}
+      return power();
     }
-    function postfix() {
-      let p = primary(), pct = false;
-      while (peek() === '%') { next(); p = p / 100; pct = true; }
-      return { v: p, pct };
+    function power(){
+      const b=postfix();
+      if(isOp('^')){eat();const e=unary();return {v:pow(b.v,e.v),pct:false}}
+      return b;
     }
-    function primary() {
-      const t = next();
-      if (t === undefined) throw new Error('syntax');
-      if (t === '(') {
-        const v = expression();
-        if (peek() === ')') next();
-        return v;
+    function postfix(){
+      let r={v:primary(),pct:false};
+      for(;;){
+        if(isOp('!')){eat();r={v:fact(r.v),pct:false}}
+        else if(isOp('%')){eat();r={v:r.v/100,pct:true}}
+        else if(isOp('\u00b0')){eat();r={v:r.v*(PI/180)/unit(),pct:false}}
+        else break;
       }
-      const n = parseFloat(t);
-      if (isNaN(n)) throw new Error('syntax');
-      return n;
+      return r;
     }
-    const v = expression();
-    if (i < tokens.length) throw new Error('syntax');
-    if (!isFinite(v)) throw new Error('range');
+    function callF(name,args){
+      const d=F[name], a=d[0], n=args.length;
+      const okArity=a==='+'?n>=1:Array.isArray(a)?(n>=a[0]&&n<=a[1]):n===a;
+      if(!okArity)throw new CalcError('Wrong number of arguments for '+name);
+      return d[1](...args);
+    }
+    function primary(){
+      const t=eat();
+      if(!t)throw new CalcError('Incomplete expression');
+      if(t.t==='n')return t.v;
+      if(t.t==='op'&&t.v==='('){const v=addExpr();if(isOp(')'))eat();return v}
+      if(t.t==='id'){
+        const name=ALIAS[t.v]||t.v;
+        if(has(F,name)){
+          let args=[];
+          if(isOp('(')){
+            eat();
+            if(!isOp(')')){args.push(addExpr());while(isOp(',')){eat();args.push(addExpr())}}
+            if(isOp(')'))eat();
+          }else if(F[name][0]!==0&&!(Array.isArray(F[name][0])&&F[name][0][0]===0)){
+            args=[unary().v];
+          }
+          return callF(name,args);
+        }
+        if(has(CONST,name))return CONST[name];
+        if(has(vars,name))return vars[name];
+        throw new CalcError('Unknown "'+t.v+'"');
+      }
+      throw new CalcError('Unexpected "'+t.v+'"');
+    }
+    const v=addExpr();
+    if(i<tokens.length)throw new CalcError('Unexpected "'+tokens[i].v+'"');
     return v;
   }
 
-  // balance parens & trim dangling operator for live preview / equals
-  function normalize(s) {
-    s = s.replace(/[+\u2212×÷]+$/,'').replace(/\($/,'');
-    const open = (s.match(/\(/g) || []).length, close = (s.match(/\)/g) || []).length;
-    return s + ')'.repeat(Math.max(0, open - close));
-  }
-  const clean = n => Number(parseFloat(n.toPrecision(12)));
-
-  function fmt(n) {
-    if (Math.abs(n) >= 1e15 || (n !== 0 && Math.abs(n) < 1e-9)) {
-      return n.toExponential(6).replace(/\.?0+e/, 'e').replace('e+', 'e');
+  function evaluate(src){
+    const tokens=tokenize(src);
+    if(!tokens.length)throw new CalcError('Empty');
+    let target=null;
+    if(tokens.length>=2&&tokens[0].t==='id'&&tokens[1].t==='op'&&tokens[1].v==='='){
+      const n=tokens[0].v;
+      if(reserved(n))throw new CalcError('"'+n+'" is reserved');
+      target=n; tokens.splice(0,2);
+      if(!tokens.length)throw new CalcError('Incomplete expression');
     }
-    const s = clean(n).toLocaleString('en-US', { maximumFractionDigits: 10, useGrouping: useSep });
-    return s.replace('-', MINUS);
+    const v=run(tokens);
+    if(typeof v!=='number'||Number.isNaN(v))throw new CalcError('Domain error','math');
+    if(!Number.isFinite(v))throw new CalcError('Number too large','math');
+    return {value:v,target};
   }
-  // pretty-print the typed expression (group digits too)
-  function pretty(s) {
-    if (!useSep) return s;
-    return s.replace(/\d+/g, m => m.length > 3 ? Number(m).toLocaleString('en-US') : m);
-  }
+  const clean=n=>{if(!Number.isFinite(n))return n;const c=Number(n.toPrecision(12));return c===0?0:c};
+  const balance=s=>{s=s.trim();while(/[+\-\u2212\u00d7\u00f7*\/^,=(]$/.test(s))s=s.slice(0,-1);const o=(s.match(/\(/g)||[]).length,c=(s.match(/\)/g)||[]).length;return s+')'.repeat(Math.max(0,o-c))};
+  return {evaluate,cfg,vars,clean,balance,isFunc,reserved};
+})();
+/*ENGINE-END*/
 
-  /* ---------- rendering ---------- */
-  function fit() {
-    resEl.style.fontSize = '';
-    const base = parseFloat(getComputedStyle(resEl).fontSize);
-    let size = base;
-    while (resEl.scrollWidth > resEl.clientWidth && size > 18) { size -= 2; resEl.style.fontSize = size + 'px'; }
+(()=>{
+'use strict';
+const MINUS='\u2212';
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const ld=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const rm=k=>{try{localStorage.removeItem(k)}catch(e){}};
+
+/* ---------- settings ---------- */
+const DEF={theme:'system',accent:'#2563eb',tint:true,opStyle:'tint',font:'mono',scale:1,leftHand:false,
+  angle:'deg',numFmt:'en',decimals:'auto',notation:'auto',sciKeys:'auto',sysKb:false,
+  currency:'\u20a6',vat:7.5,vibrate:true,sound:false,awake:false,saveHistory:true};
+let S=Object.assign({},DEF,ld('quo2.settings',{}));
+const NF={en:{g:',',d:'.',s:3},in:{g:',',d:'.',s:2},fr:{g:'\u202f',d:',',s:3},de:{g:'.',d:',',s:3},plain:{g:'',d:'.',s:3},plainc:{g:'',d:',',s:3}};
+if(!NF[S.numFmt])S.numFmt='en';
+const saveS=()=>sv('quo2.settings',S);
+E.cfg.angle=S.angle;
+{const v=ld('quo2.vars',{});for(const k in v)if(typeof v[k]==='number'&&isFinite(v[k]))E.vars[k]=v[k]}
+const saveVars=()=>sv('quo2.vars',E.vars);
+
+/* ---------- theme ---------- */
+const root=document.documentElement;
+const hex2=h=>{h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');const n=parseInt(h,16);return[(n>>16)&255,(n>>8)&255,n&255]};
+const toHex=a=>'#'+a.map(v=>Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')).join('');
+const mix=(a,b,t)=>{const A=hex2(a),B=hex2(b);return toHex(A.map((v,i)=>v+(B[i]-v)*t))};
+const lum=h=>{const[r,g,b]=hex2(h).map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*r+.7152*g+.0722*b};
+const dq=matchMedia('(prefers-color-scheme: dark)');
+const isDark=()=>S.theme==='dark'||(S.theme==='system'&&dq.matches);
+function applyTheme(){
+  const dark=isDark(), ac=/^#[0-9a-f]{6}$/i.test(S.accent)?S.accent:DEF.accent, t=S.tint?1:0;
+  const ink=dark?'#e6eaf2':'#101828';
+  const bg=mix(dark?'#0c1017':'#eef0f4',ac,t*(dark?.08:.05));
+  const panel=dark?mix(bg,'#ffffff',.045):mix('#ffffff',ac,t*.012);
+  const key=dark?mix(bg,'#ffffff',.10):'#ffffff';
+  const aInk=lum(ac)>.42?'#0b1020':'#ffffff';
+  const aText=dark?mix(ac,'#ffffff',.4):mix(ac,'#000000',.22);
+  const aSoft=mix(bg,ac,dark?.30:.16);
+  const aDeep=mix(ac,'#000000',.2);
+  const fn=dark?mix(bg,'#ffffff',.17):mix(bg,ink,.10);
+  let op=aSoft,opInk=aText,eq=ac,eqInk=aInk;
+  if(S.opStyle==='solid'){op=ac;opInk=aInk;eq=aDeep;eqInk=lum(aDeep)>.42?'#0b1020':'#fff'}
+  if(S.opStyle==='plain'){op=fn;opInk=ink}
+  const v={bg,page:dark?mix(bg,'#000000',.4):mix(bg,ink,.045),panel,ink,mute:dark?'#8c96a8':'#667085',
+    line:dark?mix(bg,'#ffffff',.17):mix(bg,ink,.15),key,'key-ink':ink,'key-hover':dark?mix(key,'#ffffff',.07):mix(key,ink,.045),
+    fn,'fn-ink':ink,sci:dark?mix(bg,'#ffffff',.08):mix(bg,ink,.05),op,'op-ink':opInk,eq,'eq-ink':eqInk,
+    accent:ac,'accent-ink':aInk,'accent-soft':aSoft,danger:dark?'#ff8a80':'#d92d20',shade:dark?'rgba(0,0,0,.45)':'rgba(16,24,40,.16)',
+    scale:String(S.scale),num:S.font==='sans'?'var(--sans)':'var(--mono)'};
+  for(const k in v)root.style.setProperty('--'+k,v[k]);
+  root.style.colorScheme=dark?'dark':'light';
+  $('meta[name=theme-color]').content=bg;
+}
+dq.addEventListener&&dq.addEventListener('change',()=>{if(S.theme==='system')applyTheme()});
+
+/* ---------- number formatting ---------- */
+const plain=a=>a.toLocaleString('en-US',{useGrouping:false,maximumFractionDigits:20});
+function grp(i){
+  const f=NF[S.numFmt];
+  if(!f.g||i.length<=3)return i;
+  if(f.s===2){const last=i.slice(-3),rest=i.slice(0,-3);return rest.replace(/\B(?=(\d{2})+(?!\d))/g,f.g)+f.g+last}
+  return i.replace(/\B(?=(\d{3})+(?!\d))/g,f.g);
+}
+function expo(a,dec,eng){
+  const f=NF[S.numFmt];
+  if(a===0)return '0';
+  let e=Math.floor(Math.log10(a));
+  if(eng)e=Math.floor(e/3)*3;
+  let m=a/Math.pow(10,e);
+  const lim=eng?1000:10;
+  const str=mm=>dec==='auto'?String(Number(mm.toPrecision(10))):mm.toFixed(+dec);
+  let s=str(m);
+  if(parseFloat(s)>=lim){m/=eng?1000:10;e+=eng?3:1;s=str(m)}
+  return s.replace('.',f.d)+'e'+e;
+}
+function fmt(n,o){
+  o=o||{};
+  if(!Number.isFinite(n))return String(n);
+  n=E.clean(n);
+  const f=NF[S.numFmt], dec=o.decimals!==undefined?o.decimals:S.decimals, a=Math.abs(n);
+  let mode=o.notation||S.notation;
+  if(mode==='auto')mode=(a>=1e15||(a>0&&a<1e-9))?'sci':'fix';
+  let s;
+  if(mode==='sci')s=expo(a,dec,false);
+  else if(mode==='eng')s=expo(a,dec,true);
+  else{const t=dec==='auto'?plain(a):a.toFixed(+dec);const p=t.split('.');s=grp(p[0])+(p[1]?f.d+p[1]:'')}
+  return (n<0&&parseFloat(s.replace(/[^\d.e-]/g,''))!==0?MINUS:'')+s;
+}
+const raw=n=>{const c=E.clean(n);let s=String(c);if(/e/.test(s))s=c.toFixed(12).replace(/\.?0+$/,'');return s};
+function fraction(v){
+  if(!Number.isFinite(v)||Number.isInteger(v)||Math.abs(v)>1e9)return '';
+  const sg=v<0?MINUS:'', x=Math.abs(v);
+  let h1=1,h0=0,k1=0,k0=1,b=x;
+  for(let i=0;i<24;i++){
+    const a=Math.floor(b), h2=a*h1+h0, k2=a*k1+k0;
+    h0=h1;h1=h2;k0=k1;k1=k2;
+    if(k1>9999)return '';
+    if(Math.abs(x-h1/k1)<1e-10*Math.max(1,x))break;
+    const fr=b-a; if(fr<1e-12)break; b=1/fr;
   }
-  function render(showErr) {
-    resEl.classList.remove('err');
-    if (showErr) { resEl.textContent = showErr; resEl.classList.add('err'); resEl.style.fontSize=''; return; }
-    if (finished) {
-      resEl.textContent = fmt(lastResult);
-    } else if (!expr) {
-      resEl.textContent = '0';
-    } else {
-      // live preview of the answer, or the number being typed
-      let preview = null;
-      try {
-        const n = normalize(expr);
-        if (n && /[+\u2212×÷%()]/.test(n.replace(/^\u2212/, '').replace(/^\(?\u2212/, ''))) preview = evaluate(n);
-      } catch {}
-      if (preview !== null) resEl.textContent = fmt(preview);
-      else {
-        const m = expr.match(/(\d+\.?\d*|\.\d+)$/);
-        resEl.textContent = m ? pretty(m[0]) : (expr.match(/(\d+\.?\d*|\.\d+)/g) || ['0']).slice(-1)[0];
-      }
+  if(Math.abs(x-h1/k1)>1e-9*Math.max(1,x))return '';
+  return '= '+sg+h1+'/'+k1+(h1>k1?'  ('+sg+Math.floor(h1/k1)+' '+(h1%k1)+'/'+k1+')':'');
+}
+
+/* ---------- state & refs ---------- */
+const st={finished:false,last:0,second:false,sciUser:null,pvText:'0',hist:S.saveHistory?ld('quo2.history',[]):[],tab:'hist',view:'calc'};
+const shell=$('#shell'),X=$('#expr'),resEl=$('#result'),subEl=$('#sub'),toastEl=$('#toast');
+X.inputMode=S.sysKb?'text':'none';
+
+let toastT;
+function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>toastEl.classList.remove('show'),1500)}
+async function copyText(t,label){
+  try{await navigator.clipboard.writeText(t)}catch(e){
+    const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();
+    try{document.execCommand('copy')}catch(_){}a.remove();
+  }
+  toast('Copied '+(label||t));
+}
+
+/* ---------- keypad ---------- */
+const dg=n=>({l:n,i:n,c:'d'});
+const MAIN=[
+  [{l:'AC',a:'clear',c:'fn',aria:'All clear'},{l:'( )',a:'paren',c:'fn',aria:'Parenthesis'},{l:'%',i:'%',c:'fn'},{l:'\u00f7',i:'\u00f7',c:'op',aria:'Divide'}],
+  [dg('7'),dg('8'),dg('9'),{l:'\u00d7',i:'\u00d7',c:'op',aria:'Multiply'}],
+  [dg('4'),dg('5'),dg('6'),{l:MINUS,i:MINUS,c:'op',aria:'Subtract'}],
+  [dg('1'),dg('2'),dg('3'),{l:'+',i:'+',c:'op',aria:'Add'}],
+  [{l:'\u00b1',a:'neg',c:'fn',aria:'Plus minus'},dg('0'),{l:'.',i:'.',c:'d',aria:'Decimal point'},{l:'=',a:'eq',c:'eq',aria:'Equals'}]
+];
+const f=(l,l2,i,ai)=>({l,l2,i,ai});
+const SCI=[
+  [{l:'2nd',a:'second'},f('sin','sin<sup>\u22121</sup>','sin(','asin('),f('cos','cos<sup>\u22121</sup>','cos(','acos('),f('tan','tan<sup>\u22121</sup>','tan(','atan('),f('\u03c0','e','\u03c0','e')],
+  [f('ln','e<sup>x</sup>','ln(','exp('),f('log','10<sup>x</sup>','log(','10^'),f('\u221a','\u221b','\u221a(','\u221b('),f('x<sup>2</sup>','x<sup>3</sup>','^2','^3'),f('x<sup>y</sup>','|x|','^','abs(')],
+  [f('n!','nCr','!','ncr('),f('1/x','nPr','1\u00f7(','npr('),f('mod','gcd','mod','gcd('),f('EE','lcm','\u00d710^','lcm('),f('Ans','M','Ans','M')],
+  [f('sinh','sinh<sup>\u22121</sup>','sinh(','asinh('),f('cosh','cosh<sup>\u22121</sup>','cosh(','acosh('),f('tanh','tanh<sup>\u22121</sup>','tanh(','atanh('),f(',','atan2',',','atan2('),f('x','y','x','y')],
+  [f('abs','sign','abs(','sign('),f('\u230ax\u230b','\u2308x\u2309','floor(','ceil('),f('round','trunc','round(','trunc('),f('\u00b0','hypot','\u00b0','hypot('),f('rand','log\u2082','rand(','log2(')]
+];
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+function mk(k,extra){
+  const at=(k.a?' data-a="'+k.a+'"':'')+(k.i!=null?' data-i="'+esc(k.i)+'"':'')+(k.ai?' data-ai="'+esc(k.ai)+'"':'');
+  const lab=k.l2?'<span class="l1">'+k.l+'</span><span class="l2">'+k.l2+'</span>':'<span>'+k.l+'</span>';
+  return '<button class="k '+(k.c||'')+(k.l2?' has-alt':'')+(extra||'')+'"'+at+(k.aria?' aria-label="'+k.aria+'"':'')+'>'+lab+'</button>';
+}
+function buildPad(){
+  const rows=S.leftHand?MAIN.map(r=>[r[3],r[0],r[1],r[2]]):MAIN;
+  $('#main').innerHTML=rows.flat().map(k=>mk(k)).join('');
+  $('#sci').innerHTML=SCI.map((r,ri)=>r.map(k=>mk(k,ri===4?' r5':'')).join('')).join('');
+  shell.dataset.lh=S.leftHand?1:0;
+  setSecond(st.second);
+}
+function setSecond(on){
+  st.second=on;shell.dataset.second=on?1:0;
+  const b=$('[data-a="second"]');if(b)b.classList.toggle('on',on);
+}
+
+/* ---------- feedback ---------- */
+let actx;
+function feedback(){
+  if(S.vibrate&&navigator.vibrate)try{navigator.vibrate(8)}catch(e){}
+  if(S.sound){try{
+    actx=actx||new(window.AudioContext||window.webkitAudioContext)();
+    const o=actx.createOscillator(),g=actx.createGain();
+    o.type='square';o.frequency.value=1400;g.gain.value=.025;o.connect(g);g.connect(actx.destination);
+    o.start();g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+.04);o.stop(actx.currentTime+.05);
+  }catch(e){}}
+}
+let wl=null;
+async function wake(){
+  try{
+    if(S.awake&&'wakeLock' in navigator&&!wl){wl=await navigator.wakeLock.request('screen');wl.addEventListener('release',()=>{wl=null})}
+    else if(!S.awake&&wl){await wl.release();wl=null}
+  }catch(e){}
+}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')wake()});
+function flash(i){const b=$$('#main .k').find(k=>k.dataset.i===i);if(b){b.classList.add('pr');setTimeout(()=>b.classList.remove('pr'),90)}}
+
+/* ---------- display ---------- */
+function fit(){
+  resEl.style.fontSize='';
+  if(resEl.classList.contains('err')||resEl.classList.contains('warn'))return;
+  let size=parseFloat(getComputedStyle(resEl).fontSize);
+  while(resEl.scrollWidth>resEl.clientWidth&&size>16){size-=2;resEl.style.fontSize=size+'px'}
+}
+function setResult(text,cls){resEl.textContent=text;resEl.className='selectable'+(cls?' '+cls:'');fit()}
+function setSub(t){subEl.textContent=t||''}
+function updMem(){$('#mrBtn').classList.toggle('has',E.vars.m!==0)}
+function updAngle(){$('#angleChip').textContent=S.angle.toUpperCase()}
+
+function preview(){
+  const rawv=X.value;
+  if(!rawv.trim()){st.pvText='0';st.pv=0;setResult('0','');setSub('');return}
+  try{
+    const r=E.evaluate(E.balance(rawv)), v=E.clean(r.value);
+    st.pv=v;st.pvText=fmt(v);setResult(st.pvText,'');setSub(fraction(v));
+  }catch(err){
+    if(err.kind==='math'){setResult(err.message,'warn');setSub('')}
+    else setResult(st.pvText,'');
+  }
+}
+let saveT;
+function changed(){
+  st.finished=false;preview();
+  clearTimeout(saveT);saveT=setTimeout(()=>sv('quo2.expr',X.value),300);
+  if(X.selectionStart===X.value.length)X.scrollLeft=X.scrollWidth;
+}
+function refreshResult(){if(st.finished){setResult(fmt(st.last),'final');setSub(fraction(st.last))}else preview()}
+
+/* ---------- editing ---------- */
+function insert(text){
+  if(X.value.length>240)return;
+  if(st.finished){
+    st.finished=false;
+    X.value=/^(?:[+\u2212\u00d7\u00f7^%!\u00b0]|mod)/.test(text)?'Ans':'';
+    X.setSelectionRange(X.value.length,X.value.length);
+  }
+  const v=X.value;let s=X.selectionStart,e=X.selectionEnd;
+  if(s===e){
+    const prev=v[s-1];
+    if(/^[+\u00d7\u00f7]$/.test(text)&&prev&&/[+\u2212\u00d7\u00f7]/.test(prev))s--;
+    else if(text===MINUS&&prev&&/[+\u2212]/.test(prev))s--;
+    else if(/^[\u00d7\u00f7^]$/.test(text)&&(!prev||prev==='('))return;
+    else if(text==='.'){
+      const left=v.slice(0,s);
+      if(/\d*\.\d*$/.test(left))return;
+      if(!/\d$/.test(left))text='0.';
     }
-    fit();
   }
-  function renderExpr() {
-    exprEl.textContent = pretty(expr);
-    $('expr').scrollLeft = 0;
+  X.setRangeText(text,s,e,'end');
+  changed();
+}
+function del(){
+  st.finished=false;
+  const s=X.selectionStart,e=X.selectionEnd;
+  if(s===e){
+    if(!s)return;
+    const left=X.value.slice(0,s), m=/(?:[a-z]{2,}\d*\(?|[\u221a\u221b]\()$/i.exec(left);
+    X.setRangeText('',s-(m?m[0].length:1),e,'end');
+  }else X.setRangeText('',s,e,'end');
+  changed();
+}
+function paren(){
+  if(st.finished){st.finished=false;X.value='';X.setSelectionRange(0,0)}
+  const left=X.value.slice(0,X.selectionStart);
+  const o=(left.match(/\(/g)||[]).length,c=(left.match(/\)/g)||[]).length;
+  const w=/[a-z]+$/i.exec(left);
+  const operandEnd=/[\d.)%!\u00b0\u03c0]$/.test(left)||(w&&!E.isFunc(w[0].toLowerCase())&&w[0].toLowerCase()!=='mod');
+  insert(o>c&&operandEnd?')':'(');
+}
+function negate(){
+  if(st.finished){st.finished=false;X.value=X.value.startsWith(MINUS+'Ans')?'Ans':MINUS+'Ans';changed();return}
+  const v=X.value,pos=X.selectionStart;let left=v.slice(0,pos);const right=v.slice(pos);let m;
+  if((m=/\(\u2212(\d*\.?\d+|\d+\.)\)$/.exec(left)))left=left.slice(0,m.index)+m[1];
+  else if((m=/(\d+\.?\d*|\.\d+)$/.exec(left)))left=left.slice(0,m.index)+'('+MINUS+m[0]+')';
+  else{insert(MINUS);return}
+  X.value=left+right;X.setSelectionRange(left.length,left.length);changed();
+}
+function clearAll(){X.value='';st.finished=false;st.pvText='0';changed()}
+function normalizeInput(){
+  const nz=s=>s.replace(/\*/g,'\u00d7').replace(/\//g,'\u00f7').replace(/-/g,MINUS).replace(/\s+/g,'');
+  const p=X.selectionStart,L=nz(X.value.slice(0,p)),R=nz(X.value.slice(p));
+  X.value=L+R;X.setSelectionRange(L.length,L.length);
+}
+function typed(str){
+  for(const ch of str){
+    if(ch===' ')continue;
+    if(ch==='='){if(!st.finished&&/^[a-z_][a-z0-9_]*$/i.test(X.value.trim()))insert('=');else equals();continue}
+    const map={'*':'\u00d7','/':'\u00f7','-':MINUS};
+    const t=map[ch]||ch;
+    insert(t);flash(t);
   }
-  function refresh(err) { renderExpr(); render(err); memEl.classList.toggle('show', hasMem); }
+}
 
-  /* ---------- input actions ---------- */
-  const isOp = c => c === '+' || c === MINUS || c === '×' || c === '÷';
-  function startFresh() { if (finished) { expr = ''; finished = false; } }
+/* ---------- evaluate ---------- */
+function equals(){
+  const src=X.value.trim();
+  if(!src||st.finished)return;
+  try{
+    const r=E.evaluate(E.balance(src)), v=E.clean(r.value);
+    if(r.target)E.vars[r.target]=v;
+    E.vars.ans=v;st.last=v;st.finished=true;
+    st.hist.unshift({e:src,v,t:r.target||null});
+    st.hist=st.hist.slice(0,60);
+    if(S.saveHistory)sv('quo2.history',st.hist);
+    saveVars();setResult(fmt(v),'final');setSub(fraction(v));renderSide();
+  }catch(err){setResult(err.message||'Error','err');setSub('')}
+}
+function curVal(){
+  if(st.finished)return st.last;
+  const s=X.value.trim();if(!s)return 0;
+  try{return E.clean(E.evaluate(E.balance(s)).value)}catch(e){return null}
+}
+function memAct(a){
+  if(a==='mc'){E.vars.m=0;toast('Memory cleared')}
+  else if(a==='mr'){insert('M');return}
+  else{
+    const v=curVal();if(v==null||!Number.isFinite(v)){toast('Nothing to store');return}
+    E.vars.m=E.clean(E.vars.m+(a==='mp'?v:-v));toast('M = '+fmt(E.vars.m));
+  }
+  saveVars();updMem();renderSide();
+}
 
-  function digit(d) {
-    startFresh();
-    const m = expr.match(/(\d+\.?\d*|\.\d+)$/);
-    if (m && m[0].length >= 15) return;
-    if (m && m[0] === '0' && d !== '.') expr = expr.slice(0, -1);   // no leading zeros
-    else if (/\)$|%$/.test(expr)) expr += '×';
-    expr += d;
-  }
-  function dot() {
-    startFresh();
-    const m = expr.match(/(\d+\.?\d*|\.\d+)$/);
-    if (m) { if (m[0].includes('.')) return; expr += '.'; }
-    else { if (/\)$|%$/.test(expr)) expr += '×'; expr += '0.'; }
-  }
-  function op(o) {
-    if (finished) { expr = fmtRaw(lastResult); finished = false; }
-    if (!expr) { if (o === MINUS) expr = MINUS; return; }
-    if (/\($/.test(expr)) { if (o === MINUS) expr += MINUS; return; }
-    if (isOp(expr.slice(-1))) {
-      if (expr.length === 1) return;
-      expr = expr.slice(0, -1);
-    }
-    expr += o;
-  }
-  const fmtRaw = n => { const s = String(clean(n)); return s.includes('e') ? clean(n).toFixed(10).replace(/\.?0+$/,'') : s.replace('-', MINUS); };
-  function paren() {
-    startFresh();
-    const open = (expr.match(/\(/g) || []).length, close = (expr.match(/\)/g) || []).length;
-    const last = expr.slice(-1);
-    if (open > close && (/\d|\)|%/.test(last))) expr += ')';
-    else { if (/\d|\)|%/.test(last)) expr += '×'; expr += '('; }
-  }
-  function percent() {
-    if (finished) { expr = fmtRaw(lastResult); finished = false; }
-    if (/\d$|\)$|%$/.test(expr)) expr += '%';
-  }
-  function negate() {
-    if (finished) { expr = fmtRaw(lastResult); finished = false; }
-    let m;
-    if ((m = expr.match(/\(\u2212(\d*\.?\d*)\)$/))) expr = expr.slice(0, m.index) + m[1];
-    else if ((m = expr.match(/(\d+\.?\d*|\.\d+)$/))) expr = expr.slice(0, m.index) + '(' + MINUS + m[0] + ')';
-    else if (!expr) expr = '(' + MINUS;
-  }
-  function back() {
-    if (finished) { expr = fmtRaw(lastResult); finished = false; }
-    expr = expr.slice(0, -1);
-  }
-  function clear() { expr = ''; finished = false; lastResult = null; }
-
-  function equals() {
-    if (!expr || finished) return;
-    const n = normalize(expr);
-    if (!n) return;
-    try {
-      const v = clean(evaluate(n));
-      addHistory(pretty(n), fmt(v), v);
-      lastResult = v; finished = true;
-      exprEl.textContent = pretty(n) + ' =';
-      render();
-      memEl.classList.toggle('show', hasMem);
-      return 'done';
-    } catch (e) {
-      refresh(e.message === 'div0' ? "Can't divide by 0" : 'Check expression');
-      return 'err';
-    }
-  }
-
-  /* ---------- memory ---------- */
-  function currentValue() {
-    if (finished) return lastResult;
-    try { const n = normalize(expr); return n ? evaluate(n) : 0; } catch { return null; }
-  }
-  function memAct(a) {
-    if (a === 'mc') { memory = 0; hasMem = false; toast('Memory cleared'); }
-    else if (a === 'mr') {
-      if (!hasMem) return toast('Memory is empty');
-      startFresh();
-      const s = fmtRaw(memory);
-      if (/\d$|\)$|%$/.test(expr)) expr += '×';
-      expr += memory < 0 ? '(' + s + ')' : s;
-    } else {
-      const v = currentValue();
-      if (v === null) return toast('Nothing to store');
-      memory += a === 'mplus' ? v : -v; hasMem = true;
-      toast('Memory: ' + fmt(memory));
-    }
-    refresh();
-  }
-
-  /* ---------- history ---------- */
-  function addHistory(e, r, v) {
-    history.unshift({ e, r, v });
-    history = history.slice(0, 40);
-    store.set('quo.history', history);
-  }
-  function drawHistory() {
-    histEl.innerHTML = '';
-    if (!history.length) {
-      histEl.innerHTML = '<div class="empty">Nothing yet.<br>Your calculations will appear here.</div>';
-      return;
-    }
-    history.forEach(h => {
-      const b = document.createElement('button');
-      b.className = 'hist-item';
-      b.innerHTML = '<small></small><strong></strong>';
-      b.firstChild.textContent = h.e + ' =';
-      b.lastChild.textContent = h.r;
-      b.onclick = () => {
-        if (finished || !expr) { expr = fmtRaw(h.v); finished = false; }
-        else { if (/\d$|\)$|%$/.test(expr)) expr += '×'; expr += h.v < 0 ? '(' + fmtRaw(h.v) + ')' : fmtRaw(h.v); }
-        closeHist(); refresh();
-      };
-      histEl.appendChild(b);
+/* ---------- side panel ---------- */
+const side=$('#side'),scrim=$('#scrim');
+function h(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n}
+function renderSide(){
+  const b=$('#sideBody');b.innerHTML='';
+  $$('#stabs button').forEach(x=>x.classList.toggle('on',x.dataset.st===st.tab));
+  if(st.tab==='hist'){
+    if(!st.hist.length){b.appendChild(h('div','empty','No calculations yet.'));return}
+    st.hist.forEach((it,idx)=>{
+      const d=h('div','he');
+      const a=h('button','hx',(it.t?it.t+' = ':'')+it.e.replace(/^[a-z_][a-z0-9_]*=/i,''));a.dataset.x=idx;a.title='Edit this expression';
+      const c=h('button','hv','= '+fmt(it.v));c.dataset.v=idx;c.title='Insert result';
+      d.append(a,c);b.appendChild(d);
     });
+    const c=h('button','btn danger','Clear history');c.id='clrHist';c.style.marginTop='6px';b.appendChild(c);
+  }else{
+    const names=Object.keys(E.vars).filter(k=>k!=='ans'&&k!=='m').sort();
+    [['ans',E.vars.ans,true],['m',E.vars.m,true]].concat(names.map(n=>[n,E.vars[n],false])).forEach(([n,v,ro])=>{
+      const r=h('div','vr');
+      const nb=h('button','vn',n==='ans'?'Ans':n==='m'?'M':n);nb.dataset.n=n==='ans'?'Ans':n==='m'?'M':n;nb.title='Insert';
+      r.append(nb,h('span','vv',fmt(v)));
+      if(!ro){const d=h('button','vd','\u00d7');d.dataset.d=n;d.title='Delete variable';r.appendChild(d)}
+      b.appendChild(r);
+    });
+    const form=h('div','vform');
+    const inp=h('input','in');inp.id='vname';inp.placeholder='name';inp.maxLength=12;inp.autocomplete='off';inp.setAttribute('autocapitalize','off');inp.setAttribute('aria-label','Variable name');
+    const sb=h('button','btn primary','Store Ans');sb.id='vstore';
+    form.append(inp,sb);b.appendChild(form);
+    b.appendChild(h('div','hint','You can also type x=5*3 in the expression and press =.'));
   }
-  const openHist = () => { drawHistory(); panel.classList.add('open'); $('histBtn').classList.add('on'); };
-  const closeHist = () => { panel.classList.remove('open'); $('histBtn').classList.remove('on'); };
+}
+$('#sideBody').addEventListener('click',e=>{
+  const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.x!==undefined){const it=st.hist[+t.dataset.x];X.value=it.e;st.finished=false;changed();closeSide();if(st.view!=='calc')showView('calc')}
+  else if(t.dataset.v!==undefined){const it=st.hist[+t.dataset.v];insert(it.v<0?'('+raw(it.v)+')':raw(it.v));closeSide();showView('calc')}
+  else if(t.id==='clrHist'){st.hist=[];if(S.saveHistory)sv('quo2.history',[]);renderSide()}
+  else if(t.dataset.n){insert(t.dataset.n);closeSide();showView('calc')}
+  else if(t.dataset.d){delete E.vars[t.dataset.d];saveVars();renderSide()}
+  else if(t.id==='vstore'){
+    const n=($('#vname').value||'').trim().toLowerCase();
+    if(!/^[a-z_][a-z_0-9]{0,11}$/.test(n))return toast('Use letters, numbers or _');
+    if(E.reserved(n))return toast('"'+n+'" is reserved');
+    E.vars[n]=E.vars.ans;saveVars();renderSide();toast(n+' = '+fmt(E.vars.ans));
+  }
+});
+$('#stabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b){st.tab=b.dataset.st;renderSide()}});
+function openSide(tab){if(tab)st.tab=tab;renderSide();side.classList.add('open');scrim.classList.add('on')}
+function closeSide(){if(shell.dataset.dock==='1')return;side.classList.remove('open');scrim.classList.remove('on')}
+$('#histBtn').onclick=()=>side.classList.contains('open')?closeSide():openSide();
+$('#sideClose').onclick=closeSide;scrim.onclick=closeSide;
 
-  /* ---------- misc ---------- */
-  let toastT;
-  function toast(msg) {
-    toastEl.textContent = msg; toastEl.classList.add('show');
-    clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('show'), 1400);
+/* ---------- convert ---------- */
+const CV={
+  length:['Length',[['mm','mm',1e-3],['cm','cm',1e-2],['m','m',1],['km','km',1e3],['in','in',.0254],['ft','ft',.3048],['yd','yd',.9144],['mi','mi',1609.344],['nmi','nmi',1852]],'m','ft'],
+  mass:['Mass',[['mg','mg',1e-6],['g','g',1e-3],['kg','kg',1],['t','tonne',1e3],['oz','oz',.028349523125],['lb','lb',.45359237],['st','stone',6.35029318]],'kg','lb'],
+  temp:['Temp',[['C','\u00b0C'],['F','\u00b0F'],['K','K']],'C','F'],
+  area:['Area',[['mm2','mm\u00b2',1e-6],['cm2','cm\u00b2',1e-4],['m2','m\u00b2',1],['ha','hectare',1e4],['km2','km\u00b2',1e6],['ft2','ft\u00b2',.09290304],['yd2','yd\u00b2',.83612736],['ac','acre',4046.8564224],['mi2','mi\u00b2',2589988.110336]],'m2','ft2'],
+  volume:['Volume',[['ml','mL',1e-3],['L','L',1],['m3','m\u00b3',1e3],['tsp','tsp',.00492892159375],['tbsp','tbsp',.01478676478125],['floz','fl oz',.0295735295625],['cup','cup',.2365882365],['pt','pint',.473176473],['qt','quart',.946352946],['gal','gallon',3.785411784]],'L','gal'],
+  speed:['Speed',[['ms','m/s',1],['kmh','km/h',1/3.6],['mph','mph',.44704],['kn','knot',.5144444444],['fts','ft/s',.3048]],'kmh','mph'],
+  time:['Time',[['ms','ms',1e-3],['s','s',1],['min','min',60],['h','hour',3600],['d','day',86400],['wk','week',604800],['yr','year',31557600]],'h','min'],
+  data:['Data',[['bit','bit',.125],['B','B',1],['KB','KB',1e3],['MB','MB',1e6],['GB','GB',1e9],['TB','TB',1e12],['KiB','KiB',1024],['MiB','MiB',1048576],['GiB','GiB',1073741824],['TiB','TiB',1099511627776]],'MB','GB'],
+  energy:['Energy',[['J','J',1],['kJ','kJ',1e3],['cal','cal',4.184],['kcal','kcal',4184],['Wh','Wh',3600],['kWh','kWh',3.6e6],['BTU','BTU',1055.05585262]],'kcal','kJ'],
+  money:['Currency',null,'USD','NGN']
+};
+const CODES=['USD','NGN','EUR','GBP','GHS','ZAR','KES','XOF','EGP','CAD','AUD','CNY','JPY','INR','AED','SAR','BRL','MXN','TRY','CHF'];
+let rates=ld('quo2.rates',null);
+const cv={cat:'length',from:'m',to:'ft',pair:{},built:false};
+async function loadRates(force){
+  if(!force&&rates&&Date.now()-rates.t<6*3600e3)return;
+  try{
+    const r=await fetch('https://open.er-api.com/v6/latest/USD');
+    const j=await r.json();
+    if(j&&j.rates){rates={t:Date.now(),r:j.rates};sv('quo2.rates',rates)}
+  }catch(e){}
+  if(cv.built&&cv.cat==='money')cvFill();
+}
+function cvUnits(cat){
+  if(cat==='money'){
+    if(!rates||!rates.r)return [];
+    return CODES.filter(c=>rates.r[c]).map(c=>[c,c,1/rates.r[c]]);
   }
-  async function copyResult() {
-    const text = resEl.classList.contains('err') ? '' : resEl.textContent.replace(MINUS, '-').replace(/,/g, '');
-    if (!text) return;
-    try { await navigator.clipboard.writeText(text); toast('Copied ' + resEl.textContent); }
-    catch {
-      const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select();
-      try { document.execCommand('copy'); toast('Copied ' + resEl.textContent); } catch { toast('Copy not available'); }
-      t.remove();
+  return CV[cat][1];
+}
+function convert(cat,v,from,to){
+  if(cat==='temp'){
+    const c=from==='C'?v:from==='F'?(v-32)*5/9:v-273.15;
+    return to==='C'?c:to==='F'?c*9/5+32:c+273.15;
+  }
+  const u=cvUnits(cat),a=u.find(x=>x[0]===from),b=u.find(x=>x[0]===to);
+  return a&&b?v*a[2]/b[2]:NaN;
+}
+function numOf(el){const s=el.value.trim();if(!s)return NaN;try{return E.evaluate(s.replace(/,/g,'.')).value}catch(e){return NaN}}
+function buildConvert(){
+  cv.built=true;
+  $('#convertView').innerHTML=
+    '<div class="cats" id="cvCats"></div>'+
+    '<div class="card"><div class="cvrow"><input class="in" id="cvIn" inputmode="decimal" autocomplete="off" aria-label="Value" value="1"><select class="in" id="cvFrom" aria-label="From unit"></select></div>'+
+    '<div class="cvmid"><button class="ib" id="cvSwap" aria-label="Swap units"><svg viewBox="0 0 24 24"><path d="M7 4v14M7 18l-3-3M7 18l3-3M17 20V6M17 6l-3 3M17 6l3 3"/></svg></button></div>'+
+    '<div class="cvrow"><div class="out" id="cvOut" role="button" tabindex="0" title="Tap to copy">0</div><select class="in" id="cvTo" aria-label="To unit"></select></div>'+
+    '<div class="cvact"><button class="btn primary" id="cvSend">Use in calculator</button><span class="mute" id="cvNote"></span></div></div>'+
+    '<div class="card"><h3>All units</h3><div class="all" id="cvAll"></div></div>';
+  $('#cvCats').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cv.pair[cv.cat]=[cv.from,cv.to];cv.cat=b.dataset.c;const p=cv.pair[cv.cat]||[CV[cv.cat][2],CV[cv.cat][3]];cv.from=p[0];cv.to=p[1];if(cv.cat==='money')loadRates(false);cvFill()});
+  $('#cvIn').addEventListener('input',cvCompute);
+  $('#cvFrom').onchange=e=>{cv.from=e.target.value;cvCompute()};
+  $('#cvTo').onchange=e=>{cv.to=e.target.value;cvCompute()};
+  $('#cvSwap').onclick=()=>{const t=cv.from;cv.from=cv.to;cv.to=t;cvFill()};
+  $('#cvOut').onclick=()=>{if(cv.out!=null)copyText(raw(cv.out),fmt(cv.out,{decimals:'auto'}))};
+  $('#cvSend').onclick=()=>{if(cv.out==null||!Number.isFinite(cv.out))return;showView('calc');insert(cv.out<0?'('+raw(cv.out)+')':raw(cv.out))};
+  $('#cvAll').addEventListener('click',e=>{const b=e.target.closest('button');if(b){cv.to=b.dataset.u;cvFill()}});
+  cvFill();
+}
+function cvFill(){
+  const units=cvUnits(cv.cat);
+  $('#cvCats').innerHTML=Object.keys(CV).map(k=>'<button data-c="'+k+'" class="'+(k===cv.cat?'on':'')+'">'+CV[k][0]+'</button>').join('');
+  const opts=units.map(u=>'<option value="'+u[0]+'">'+u[1]+'</option>').join('');
+  $('#cvFrom').innerHTML=opts;$('#cvTo').innerHTML=opts;
+  if(!units.find(u=>u[0]===cv.from))cv.from=units.length?units[0][0]:'';
+  if(!units.find(u=>u[0]===cv.to))cv.to=units.length?units[Math.min(1,units.length-1)][0]:'';
+  $('#cvFrom').value=cv.from;$('#cvTo').value=cv.to;
+  cvCompute();
+}
+function cvCompute(){
+  const units=cvUnits(cv.cat), v=numOf($('#cvIn')), note=$('#cvNote');
+  if(cv.cat==='money'){
+    note.textContent=rates?'Rates from '+new Date(rates.t).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})+'. Approximate, not for trading.':'Currency needs an internet connection for rates.';
+  }else note.textContent='';
+  if(!units.length){cv.out=null;$('#cvOut').textContent='\u2014';$('#cvAll').innerHTML='';return}
+  const out=convert(cv.cat,v,cv.from,cv.to);cv.out=Number.isFinite(out)?out:null;
+  $('#cvOut').textContent=cv.out==null?'\u2014':fmt(out,{decimals:'auto'});
+  $('#cvAll').innerHTML=units.map(u=>{const r=convert(cv.cat,v,cv.from,u[0]);return '<button data-u="'+u[0]+'" class="'+(u[0]===cv.to?'on':'')+'"><span>'+u[1]+'</span><b>'+(Number.isFinite(r)?fmt(r,{decimals:'auto'}):'\u2014')+'</b></button>'}).join('');
+}
+
+/* ---------- tools ---------- */
+let toolsBuilt=false,taxAdd=true;
+function buildTools(){
+  toolsBuilt=true;
+  const inp=(id,val,ph)=>'<input class="in" id="'+id+'" inputmode="decimal" autocomplete="off" value="'+val+'"'+(ph?' placeholder="'+ph+'"':'')+'>';
+  const o=id=>'<output id="'+id+'" title="Tap to copy">\u2014</output>';
+  $('#toolsView').innerHTML='<div class="grid">'+
+  '<div class="card"><h3>Percent</h3>'+
+    '<div class="line">'+inp('p1a',15)+'<span>% of</span>'+inp('p1b',200)+'<span>=</span>'+o('p1o')+'</div>'+
+    '<div class="line">'+inp('p2a',30)+'<span>is</span>'+o('p2o')+'<span>of</span>'+inp('p2b',200)+'</div>'+
+    '<div class="line"><span>from</span>'+inp('p3a',50)+'<span>to</span>'+inp('p3b',75)+'<span>=</span>'+o('p3o')+'</div></div>'+
+  '<div class="card"><h3>Tip and split</h3><div class="rows"><label for="tb">Bill</label>'+inp('tb','')+'<label for="tp">Tip %</label>'+inp('tp',10)+'<label for="tn">People</label>'+inp('tn',1)+'</div>'+
+    '<div class="chipset" id="tipChips"><button data-t="5">5%</button><button data-t="10">10%</button><button data-t="15">15%</button><button data-t="20">20%</button></div>'+
+    '<div class="rows"><label>Tip</label>'+o('to')+'<label>Total</label>'+o('tt')+'<label>Each</label>'+o('te')+'</div></div>'+
+  '<div class="card"><h3>Tax / VAT</h3><div class="rows"><label for="xa">Amount</label>'+inp('xa','')+'<label for="xr">Rate %</label>'+inp('xr',S.vat)+'</div>'+
+    '<div class="chipset" id="taxMode"><button data-m="add" class="on">Add tax</button><button data-m="rem">Price includes tax</button></div>'+
+    '<div class="rows"><label>Before tax</label>'+o('xn')+'<label>Tax</label>'+o('xt')+'<label>Total</label>'+o('xg')+'</div></div>'+
+  '<div class="card"><h3>Discount</h3><div class="rows"><label for="da">Price</label>'+inp('da','')+'<label for="dp">Off %</label>'+inp('dp',20)+'</div>'+
+    '<div class="rows"><label>You save</label>'+o('ds')+'<label>You pay</label>'+o('dt')+'</div></div>'+
+  '<div class="card"><h3>Number bases</h3><div class="rows"><label for="bv">Value</label>'+inp('bv','255')+'<label for="bb">Base</label><select class="in" id="bb"><option value="10" selected>Decimal (10)</option><option value="2">Binary (2)</option><option value="8">Octal (8)</option><option value="16">Hex (16)</option></select></div>'+
+    '<div class="rows"><label>BIN</label>'+o('b2')+'<label>OCT</label>'+o('b8')+'<label>DEC</label>'+o('b10')+'<label>HEX</label>'+o('b16')+'</div></div>'+
+  '</div>';
+  const tv=$('#toolsView');
+  tv.addEventListener('input',toolsCalc);
+  tv.addEventListener('change',toolsCalc);
+  tv.addEventListener('click',e=>{
+    const out=e.target.closest('output');if(out){if(out.dataset.raw)copyText(out.dataset.raw,out.textContent);return}
+    const tc=e.target.closest('#tipChips button');if(tc){$('#tp').value=tc.dataset.t;toolsCalc();return}
+    const tm=e.target.closest('#taxMode button');if(tm){taxAdd=tm.dataset.m==='add';$$('#taxMode button').forEach(b=>b.classList.toggle('on',b===tm));toolsCalc()}
+  });
+  toolsCalc();
+}
+function toolsCalc(){
+  const n=id=>numOf($('#'+id));
+  const set=(id,text,rawv)=>{const el=$('#'+id);el.textContent=text;el.dataset.raw=rawv||''};
+  const money=v=>Number.isFinite(v)?S.currency+fmt(v,{decimals:2,notation:'fix'}):'\u2014';
+  const num=(v,suf)=>Number.isFinite(v)?fmt(v,{decimals:'auto',notation:'fix'})+(suf||''):'\u2014';
+  let a=n('p1a'),b=n('p1b');set('p1o',num(a*b/100),Number.isFinite(a*b)?raw(a*b/100):'');
+  a=n('p2a');b=n('p2b');{const r=b===0?NaN:a/b*100;set('p2o',num(r,'%'),Number.isFinite(r)?raw(r):'')}
+  a=n('p3a');b=n('p3b');{const r=a===0?NaN:(b-a)/Math.abs(a)*100;set('p3o',Number.isFinite(r)?(r>0?'+':'')+num(r,'%'):'\u2014',Number.isFinite(r)?raw(r):'')}
+  const bill=n('tb'),tp=n('tp'),pp=Math.max(1,Math.round(n('tn'))||1);
+  {const tip=bill*tp/100,tot=bill+tip,each=tot/pp;
+   set('to',money(tip),Number.isFinite(tip)?tip.toFixed(2):'');set('tt',money(tot),Number.isFinite(tot)?tot.toFixed(2):'');set('te',money(each),Number.isFinite(each)?each.toFixed(2):'');
+   $$('#tipChips button').forEach(x=>x.classList.toggle('on',+x.dataset.t===tp))}
+  const amt=n('xa'),rate=n('xr');
+  {let net,tax,gross;if(taxAdd){net=amt;tax=amt*rate/100;gross=net+tax}else{gross=amt;net=amt/(1+rate/100);tax=gross-net}
+   set('xn',money(net),Number.isFinite(net)?net.toFixed(2):'');set('xt',money(tax),Number.isFinite(tax)?tax.toFixed(2):'');set('xg',money(gross),Number.isFinite(gross)?gross.toFixed(2):'')}
+  const pr=n('da'),dp=n('dp');
+  {const save=pr*dp/100,pay=pr-save;set('ds',money(save),Number.isFinite(save)?save.toFixed(2):'');set('dt',money(pay),Number.isFinite(pay)?pay.toFixed(2):'')}
+  {const base=+$('#bb').value,txt=$('#bv').value.replace(/[\s_]/g,'').toLowerCase();
+   const neg=txt[0]==='-',body=neg?txt.slice(1):txt;
+   const digits='0123456789abcdef'.slice(0,base);
+   const ok=body&&[...body].every(c=>digits.includes(c));
+   const val=ok?parseInt(body,base)*(neg?-1:1):NaN;
+   [2,8,10,16].forEach(bs=>{const s=Number.isSafeInteger(val)?val.toString(bs).toUpperCase().replace('-',MINUS):'\u2014';set('b'+bs,s,Number.isSafeInteger(val)?val.toString(bs).toUpperCase():'')})}
+}
+
+/* ---------- settings UI ---------- */
+const SWATCH=['#2563eb','#0284c7','#0d9488','#16a34a','#d97706','#dc2626','#db2777','#7c3aed','#334155'];
+const SCHEMA=[
+  {h:'Appearance'},
+  {k:'theme',l:'Theme',t:'seg',o:[['system','System'],['light','Light'],['dark','Dark']]},
+  {k:'accent',l:'Accent colour',t:'accent'},
+  {k:'tint',l:'Tint backgrounds with accent',t:'sw'},
+  {k:'opStyle',l:'Operator keys',t:'seg',o:[['tint','Tinted'],['solid','Solid'],['plain','Plain']]},
+  {k:'font',l:'Number font',t:'seg',o:[['mono','Mono'],['sans','Sans']]},
+  {k:'scale',l:'Result size',t:'seg',o:[[.85,'S'],[1,'M'],[1.15,'L']]},
+  {k:'leftHand',l:'Left-handed keypad',s:'Moves operators to the left',t:'sw'},
+  {h:'Calculation'},
+  {k:'angle',l:'Angle unit',t:'seg',o:[['deg','DEG'],['rad','RAD'],['grad','GRAD']]},
+  {k:'numFmt',l:'Number format',t:'select',o:[['en','1,234,567.89'],['in','12,34,567.89'],['fr','1 234 567,89'],['de','1.234.567,89'],['plain','1234567.89'],['plainc','1234567,89']]},
+  {k:'decimals',l:'Decimal places',t:'select',o:[['auto','Auto'],[0,'0'],[1,'1'],[2,'2'],[3,'3'],[4,'4'],[5,'5'],[6,'6'],[8,'8'],[10,'10']]},
+  {k:'notation',l:'Large and small numbers',t:'seg',o:[['auto','Auto'],['sci','Sci'],['eng','Eng']]},
+  {k:'sciKeys',l:'Scientific keys',t:'seg',o:[['auto','Auto'],['always','Always'],['never','Never']]},
+  {k:'sysKb',l:'Allow phone keyboard',s:'Tap the expression to type names and functions',t:'sw'},
+  {h:'Tools'},
+  {k:'currency',l:'Currency symbol',t:'text'},
+  {k:'vat',l:'Default tax rate (%)',t:'num'},
+  {h:'Feedback'},
+  {k:'vibrate',l:'Vibrate on key press',s:'Android browsers only',t:'sw'},
+  {k:'sound',l:'Key click sound',t:'sw'},
+  {k:'awake',l:'Keep screen on',t:'sw'},
+  {h:'Data'},
+  {k:'saveHistory',l:'Save history on this device',t:'sw'},
+  {t:'acts'},
+  {t:'about'}
+];
+function renderSettings(){
+  const sheet=$('#sheet'),y=sheet.scrollTop,body=$('#setBody');
+  body.innerHTML='';
+  SCHEMA.forEach(it=>{
+    if(it.h){body.appendChild(h('div','sec',it.h));return}
+    if(it.t==='acts'){
+      const d=h('div','acts');
+      [['Copy history','cph',''],['Reset settings','rst','danger']].forEach(([t,id,c])=>{const b=h('button','btn '+c,t);b.id=id;d.appendChild(b)});
+      body.appendChild(d);return;
     }
-  }
-
-  /* ---------- wiring ---------- */
-  function run(fn, ...a) { fn(...a); refresh(); }
-  $('keys').addEventListener('click', e => {
-    const b = e.target.closest('button'); if (!b) return;
-    if (b.dataset.d !== undefined) return run(b.dataset.d === '.' ? dot : digit, b.dataset.d);
-    if (b.dataset.op) return run(op, b.dataset.op);
-    switch (b.dataset.act) {
-      case 'clear': return run(clear);
-      case 'paren': return run(paren);
-      case 'percent': return run(percent);
-      case 'neg': return run(negate);
-      case 'dot': return run(dot);
-      case 'eq': { const r = equals(); if (r === 'err') return; return; }
+    if(it.t==='about'){
+      const d=h('div','about');
+      d.innerHTML='Type expressions like <code>sin(30)</code>, <code>sqrt(2)</code>, <code>5!</code>, <code>2(3+4)</code>, <code>nCr(5,2)</code>. '+
+        '<code>Ans</code> is the last result, <code>M</code> is memory, and <code>x=5*3</code> stores a variable. '+
+        '<code>50+10%</code> adds ten percent of 50. Keys: <code>Enter</code> evaluates, <code>Esc</code> clears.<br>'+
+        'Everything runs in your browser. Only the currency converter goes online, to fetch exchange rates.';
+      body.appendChild(d);return;
     }
+    const row=h('div','row'),lab=h('div','lab',it.l);
+    if(it.s)lab.appendChild(h('small','',it.s));
+    row.appendChild(lab);
+    const v=S[it.k];
+    if(it.t==='seg'){
+      const sg=h('div','seg');
+      it.o.forEach((o,j)=>{const b=h('button',o[0]===v?'on':'',o[1]);b.dataset.k=it.k;b.dataset.j=j;sg.appendChild(b)});
+      row.appendChild(sg);
+    }else if(it.t==='select'){
+      const s=h('select','in');s.dataset.k=it.k;s.setAttribute('aria-label',it.l);
+      it.o.forEach((o,j)=>{const op=h('option','',o[1]);op.value=j;if(o[0]===v)op.selected=true;s.appendChild(op)});
+      row.appendChild(s);
+    }else if(it.t==='sw'){
+      const l=h('label','sw');const i=h('input');i.type='checkbox';i.checked=!!v;i.dataset.k=it.k;i.setAttribute('aria-label',it.l);l.append(i,h('i'));row.appendChild(l);
+    }else if(it.t==='accent'){
+      const w=h('div','swatches');
+      SWATCH.forEach(c=>{const b=h('button','swc'+(c.toLowerCase()===S.accent.toLowerCase()?' on':''));b.style.background=c;b.dataset.c=c;b.setAttribute('aria-label','Accent '+c);w.appendChild(b)});
+      const ci=h('input');ci.type='color';ci.value=S.accent;ci.dataset.k='accent';ci.setAttribute('aria-label','Custom accent colour');w.appendChild(ci);
+      row.appendChild(w);
+    }else if(it.t==='text'||it.t==='num'){
+      const i=h('input','in');i.type=it.t==='num'?'number':'text';if(it.t==='num'){i.step='0.1';i.inputMode='decimal'}else i.maxLength=4;i.value=v;i.dataset.k=it.k;i.setAttribute('aria-label',it.l);row.appendChild(i);
+    }
+    body.appendChild(row);
   });
-  document.querySelector('.memrow').addEventListener('click', e => {
-    const b = e.target.closest('button'); if (b) memAct(b.dataset.act);
-  });
-  $('screen').addEventListener('click', copyResult);
-  $('histBtn').onclick = () => panel.classList.contains('open') ? closeHist() : openHist();
-  $('closeHist').onclick = closeHist;
-  $('clearHist').onclick = () => { history = []; store.set('quo.history', history); drawHistory(); };
-  $('themeBtn').onclick = () => {
-    const t = document.documentElement.dataset.theme === 'blue' ? 'light' : 'blue';
-    document.documentElement.dataset.theme = t; store.set('quo.theme', t);
-  };
-  $('sepBtn').onclick = () => {
-    useSep = !useSep; store.set('quo.sep', useSep);
-    toast(useSep ? 'Separators on' : 'Separators off');
-    if (finished) { exprEl.textContent = exprEl.textContent; }
-    refresh();
-  };
+  sheet.scrollTop=y;
+}
+function setSetting(k,v){
+  S[k]=v;saveS();
+  if(['theme','accent','tint','opStyle','font','scale'].includes(k))applyTheme();
+  if(k==='angle'){E.cfg.angle=v;updAngle();refreshResult()}
+  if(['numFmt','decimals','notation'].includes(k)){refreshResult();renderSide();if(cv.built)cvCompute();if(toolsBuilt)toolsCalc()}
+  if(k==='leftHand')buildPad();
+  if(k==='sciKeys'){st.sciUser=null;layout()}
+  if(k==='awake')wake();
+  if(k==='sysKb')X.inputMode=v?'text':'none';
+  if(k==='saveHistory'){if(v)sv('quo2.history',st.hist);else rm('quo2.history')}
+  if(k==='currency'||k==='vat'){if(toolsBuilt){if(k==='vat')$('#xr').value=v;toolsCalc()}}
+  renderSettings();
+}
+const modal=$('#modal');
+$('#setBtn').onclick=()=>{renderSettings();modal.classList.add('open')};
+$('#setClose').onclick=()=>modal.classList.remove('open');
+modal.addEventListener('mousedown',e=>{if(e.target===modal)modal.classList.remove('open')});
+const findOpt=k=>SCHEMA.find(x=>x.k===k);
+$('#setBody').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.j!==undefined){setSetting(b.dataset.k,findOpt(b.dataset.k).o[+b.dataset.j][0])}
+  else if(b.dataset.c){setSetting('accent',b.dataset.c)}
+  else if(b.id==='cph'){
+    copyText(st.hist.length?st.hist.map(x=>(x.t?x.t+' = ':'')+x.e+' = '+fmt(x.v)).join('\n'):'(history is empty)','history');
+  }else if(b.id==='rst'){
+    if(confirm('Reset all settings to defaults?')){S=Object.assign({},DEF);saveS();E.cfg.angle=S.angle;X.inputMode='none';applyTheme();buildPad();updAngle();layout();refreshResult();renderSettings()}
+  }
+});
+$('#setBody').addEventListener('change',e=>{
+  const t=e.target,k=t.dataset.k;if(!k)return;
+  if(t.tagName==='SELECT')setSetting(k,findOpt(k).o[+t.value][0]);
+  else if(t.type==='checkbox')setSetting(k,t.checked);
+  else if(t.type==='color')setSetting('accent',t.value);
+  else if(t.type==='number'){const v=parseFloat(t.value);setSetting(k,isFinite(v)&&v>=0?v:DEF[k])}
+  else setSetting(k,t.value.slice(0,4));
+});
+$('#setBody').addEventListener('input',e=>{if(e.target.type==='color'){S.accent=e.target.value;applyTheme()}});
 
-  // keyboard
-  const press = sel => { const b = document.querySelector(sel); if (b) { b.classList.add('press'); setTimeout(() => b.classList.remove('press'), 110); } };
-  document.addEventListener('keydown', e => {
-    if (e.ctrlKey || e.metaKey || e.altKey) return;
-    const k = e.key;
-    if (k === 'Escape') { if (panel.classList.contains('open')) return closeHist(); press('[data-act=clear]'); return run(clear); }
-    if (panel.classList.contains('open')) return;
-    if (/^[0-9]$/.test(k)) { press(`[data-d="${k}"]`); return run(digit, k); }
-    if (k === '.' || k === ',') { press('[data-act=dot]'); return run(dot); }
-    const map = { '+': '+', '-': MINUS, '*': '×', 'x': '×', 'X': '×', '/': '÷' };
-    if (map[k]) { e.preventDefault(); press(`[data-op="${map[k]}"]`); return run(op, map[k]); }
-    if (k === 'Enter' || k === '=') { e.preventDefault(); press('[data-act=eq]'); return void equals(); }
-    if (k === 'Backspace') { return run(back); }
-    if (k === '(' || k === ')') { return run(() => { startFresh(); if (k === '(' && /\d|\)|%/.test(expr.slice(-1))) expr += '×'; expr += k; }); }
-    if (k === '%') { press('[data-act=percent]'); return run(percent); }
-    if (k === 'c' || k === 'C') return run(clear);
-  });
+/* ---------- layout ---------- */
+function layout(){
+  const w=innerWidth,hh=innerHeight;
+  const wide=w>=700&&w/hh>=1.25;
+  const dock=w>=1060&&hh>=520;
+  const pref=S.sciKeys==='never'?false:S.sciKeys==='always'?true:(st.sciUser===null?wide:st.sciUser);
+  const inline=wide&&pref, r5=inline||hh>=760;
+  shell.dataset.inline=inline?1:0;shell.dataset.dock=dock?1:0;shell.dataset.sci=pref?1:0;shell.dataset.r5=r5?1:0;
+  shell.style.setProperty('--sr',r5?5:4);
+  const chip=$('#sciChip');chip.hidden=S.sciKeys!=='auto';chip.classList.toggle('on',pref);
+  if(dock){side.classList.add('open');scrim.classList.remove('on');if(!side.dataset.rendered){renderSide();side.dataset.rendered=1}}
+  else if(side.dataset.rendered){side.dataset.rendered='';side.classList.remove('open')}
+  fit();
+}
+addEventListener('resize',layout);
+addEventListener('orientationchange',()=>setTimeout(layout,150));
+$('#sciChip').onclick=()=>{const cur=shell.dataset.sci==='1';st.sciUser=!cur;layout()};
 
-  window.addEventListener('resize', fit);
-  refresh();
+/* ---------- views ---------- */
+function showView(v){
+  st.view=v;
+  ['calc','convert','tools'].forEach(n=>{$('#'+n+'View').hidden=n!==v});
+  $$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
+  if(v==='convert'&&!cv.built){buildConvert();if(cv.cat==='money')loadRates(false)}
+  if(v==='tools'&&!toolsBuilt)buildTools();
+  if(v==='calc')fit();
+}
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)showView(b.dataset.view)});
+
+/* ---------- events ---------- */
+$('#pad').addEventListener('mousedown',e=>{if(e.target.closest('.k'))e.preventDefault()});
+$('#pad').addEventListener('click',e=>{
+  const b=e.target.closest('.k');if(!b)return;
+  feedback();
+  const a=b.dataset.a;
+  if(a){
+    if(a==='clear')clearAll();else if(a==='paren')paren();else if(a==='neg')negate();else if(a==='eq')equals();else if(a==='second')setSecond(!st.second);
+    return;
+  }
+  const alt=st.second&&b.dataset.ai;
+  if(alt)setSecond(false);
+  insert(alt?b.dataset.ai:b.dataset.i);
+});
+$('#mem').addEventListener('mousedown',e=>e.preventDefault());
+$('#mem').addEventListener('click',e=>{const b=e.target.closest('button');if(b){feedback();memAct(b.dataset.m)}});
+$('#angleChip').onclick=()=>{const n={deg:'rad',rad:'grad',grad:'deg'}[S.angle];setSetting('angle',n);toast('Angle: '+n.toUpperCase())};
+resEl.onclick=()=>{if(st.view!=='calc')return;const v=st.finished?st.last:st.pv;if(v!=null&&!resEl.classList.contains('err')&&!resEl.classList.contains('warn'))copyText(raw(v),fmt(v))};
+
+const bsp=$('#bsp');let rt,ri;
+const stopRep=()=>{clearTimeout(rt);clearInterval(ri)};
+bsp.addEventListener('pointerdown',e=>{e.preventDefault();feedback();del();rt=setTimeout(()=>{ri=setInterval(del,65)},380)});
+['pointerup','pointerleave','pointercancel'].forEach(t=>bsp.addEventListener(t,stopRep));
+bsp.addEventListener('click',e=>{if(e.detail===0)del()});
+
+X.addEventListener('beforeinput',e=>{
+  if(e.inputType==='insertText'&&e.data){e.preventDefault();typed(e.data)}
+  else if(e.inputType==='insertLineBreak'){e.preventDefault();equals()}
+});
+X.addEventListener('input',()=>{normalizeInput();changed()});
+X.addEventListener('focus',()=>{if(st.finished)X.setSelectionRange(X.value.length,X.value.length)});
+
+addEventListener('keydown',e=>{
+  if(modal.classList.contains('open')){if(e.key==='Escape')modal.classList.remove('open');return}
+  if(e.key==='Escape'&&side.classList.contains('open')&&shell.dataset.dock!=='1'){closeSide();return}
+  if(e.ctrlKey||e.metaKey||e.altKey||st.view!=='calc')return;
+  const t=e.target,tag=t.tagName;
+  if(t!==X&&(tag==='INPUT'||tag==='SELECT'||tag==='TEXTAREA'))return;
+  if(e.key==='Escape'){clearAll();return}
+  if(e.key==='Enter'&&tag!=='BUTTON'){e.preventDefault();equals();return}
+  if(t===X||tag==='BUTTON')return;
+  if(e.key==='Backspace'){e.preventDefault();del();return}
+  if(e.key.length===1){e.preventDefault();typed(e.key)}
+});
+
+/* ---------- init ---------- */
+applyTheme();buildPad();updAngle();updMem();
+X.value=ld('quo2.expr','');
+if(typeof X.value!=='string')X.value='';
+X.setSelectionRange(X.value.length,X.value.length);
+layout();preview();wake();
+renderSide();
 })();
 </script>
 </body>
